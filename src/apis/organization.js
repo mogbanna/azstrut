@@ -11,7 +11,7 @@ export default {
         flag = null,
         include_docs = true
     ) {
-        if(flag) {
+        if (flag) {
             return CONFIG.LOCAL_DB.query(flag, {
                 limit: limit,
                 descending: descending,
@@ -19,7 +19,7 @@ export default {
                 include_docs: include_docs
             });
         } else {
-            return CONFIG.LOCAL_DB.query('customers', {
+            return CONFIG.LOCAL_DB.query('organizations', {
                 limit: limit,
                 descending: descending,
                 skip: skip,
@@ -46,26 +46,36 @@ export default {
 
     store: function(
         name,
-        phone_number,
-        email,
-        customer_type,
-        address,
-        account_info,
+        legal_organization,
+        primay_contact,
+        secondary_contact,
+        organization_type,
         website,
+        social_media,
+        ein,
+        acc_file,
+        requests,
+        camps,
+        notes,
         created_by,
         created_at,
         updated_at,
-        type = 'customer'
+        type = 'organization'
     ) {
         return CONFIG.LOCAL_DB.post({
             type,
             name,
-            phone_number,
-            email,
-            customer_type,
-            address,
-            account_info,
+            legal_organization,
+            primay_contact,
+            secondary_contact,
+            organization_type,
             website,
+            social_media,
+            ein,
+            acc_file,
+            requests,
+            camps,
+            notes,
             created_by,
             created_at,
             updated_at,
@@ -82,12 +92,17 @@ export default {
         _id,
         _rev,
         name,
-        phone_number,
-        email,
-        customer_type,
-        address,
-        account_info,
+        legal_organization,
+        primay_contact,
+        secondary_contact,
+        organization_type,
         website,
+        social_media,
+        ein,
+        acc_file,
+        requests,
+        camps,
+        notes,
         created_by,
         created_at,
         updated_at,
@@ -98,15 +113,20 @@ export default {
             _rev,
             type,
             name,
-            phone_number,
-            email,
-            customer_type,
-            address,
-            account_info,
+            legal_organization,
+            primay_contact,
+            secondary_contact,
+            organization_type,
             website,
+            social_media,
+            ein,
+            acc_file,
+            requests,
+            camps,
+            notes,
             created_by,
             created_at,
-            updated_at
+            updated_at,
         });
     },
 

@@ -23,7 +23,7 @@ export const request = {
         completeRequestResponse: {}
     },
     actions: {
-        loadRequests: function({commit}, data) {
+        loadRequests: function({ commit }, data) {
             commit('setRequestsLoadStatus', 1);
 
             RequestAPI.index(
@@ -38,7 +38,7 @@ export const request = {
                 commit('setRequests', []);
             });
         },
-        loadRequest: function({commit}, data) {
+        loadRequest: function({ commit }, data) {
             commit('setRequestLoadStatus', 1);
 
             RequestAPI.show(
@@ -51,7 +51,7 @@ export const request = {
                 commit('setRequest', response);
             });
         },
-        searchRequests: function({commit}, data) {
+        searchRequests: function({ commit }, data) {
             commit('setRequestsLoadStatus', 1);
 
             RequestAPI.search(
@@ -67,7 +67,7 @@ export const request = {
                 commit('setRequests', []);
             });
         },
-        addRequest: function({commit}, data) {
+        addRequest: function({ commit }, data) {
             commit('setAddRequestLoadStatus', 1);
 
             RequestAPI.store(
@@ -88,7 +88,7 @@ export const request = {
                 commit('setAddRequestResponse', response);
             });
         },
-        updateRequest: function({commit}, data) {
+        updateRequest: function({ commit }, data) {
             commit('setUpdateRequestLoadStatus', 1);
             RequestAPI.update(
                 data._id,
@@ -111,7 +111,7 @@ export const request = {
                 commit('setUpdateRequestResponse', response);
             });
         },
-        completeRequest: function({commit}, data) {
+        completeRequest: function({ commit }, data) {
             commit('setCompleteRequestLoadStatus', 1);
 
             RequestAPI.completeRequest(
@@ -127,7 +127,7 @@ export const request = {
                 commit('setCompleteRequestResponse', response);
             });
         },
-        deleteRequest: function({commit}, data) {
+        deleteRequest: function({ commit }, data) {
             commit('setDeleteRequestLoadStatus', 1);
 
             RequestAPI.destroy(

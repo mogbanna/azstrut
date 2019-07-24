@@ -28,13 +28,13 @@ export default {
         return CONFIG.LOCAL_DB.search({
             query: query,
             fields: fields,
-            filter: function (doc) {
+            filter: function(doc) {
                 return doc.type === 'request'; // only index request
             },
             limit: limit,
             skip: skip,
             include_docs: include_docs
-        }); 
+        });
     },
 
     store: function(

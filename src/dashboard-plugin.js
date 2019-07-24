@@ -13,6 +13,7 @@ import SideBar from './components/SidebarPlugin';
 // Tabs plugin. Used on Panels page.
 
 // element ui language configuration
+import ElementUI from 'element-ui';
 import lang from 'element-ui/lib/locale/lang/en';
 import locale from 'element-ui/lib/locale';
 locale.use(lang);
@@ -28,6 +29,7 @@ import 'es6-promise/auto';
 
 export default {
     install(Vue) {
+        Vue.use(ElementUI);
         Vue.use(GlobalComponents);
         Vue.use(GlobalDirectives);
         Vue.use(SideBar);
