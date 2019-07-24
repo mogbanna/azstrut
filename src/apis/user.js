@@ -75,7 +75,7 @@ export default {
         });
     },
 
-    login: function(username, password, store) {
+    login: function(username, password) {
 
         if (!navigator.onLine) {
             return new Promise((resolve, reject) => {

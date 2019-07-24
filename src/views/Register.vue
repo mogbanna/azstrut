@@ -1,15 +1,27 @@
 <template>
   <div class="home">
     <img alt="Vue logo" src="../assets/logo.png">
-    <el-button type="primary" @click="register('form')"> Register</el-button>
+    <br>
+    <!-- <el-button type="primary" @click="register('form')"> Register</el-button> -->
+    <n-button slot="footer"
+            type="primary"
+            native-type="submit"
+            round
+            size="lg"
+            @click.native="test(form.username)"
+            >
+    Get Started
+    </n-button>
   </div>
 </template>
 
 <script>
+import { Select, Option } from 'element-ui';
 export default {
   name: 'login',
   components: {
-
+    [Select.name]: Select,
+    [Option.name]: Option
   },
   data() {
       return {
