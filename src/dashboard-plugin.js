@@ -13,10 +13,13 @@ import SideBar from './components/SidebarPlugin';
 // Tabs plugin. Used on Panels page.
 
 // element ui language configuration
+// import ElementUI from 'element-ui';
+// import lang from 'element-ui/lib/locale/lang/en';
+// import locale from 'element-ui/lib/locale';
+// locale.use(lang);
 import ElementUI from 'element-ui';
-import lang from 'element-ui/lib/locale/lang/en';
-import locale from 'element-ui/lib/locale';
-locale.use(lang);
+import 'element-ui/lib/theme-chalk/index.css';
+import locale from 'element-ui/lib/locale/lang/en';
 
 
 // asset imports
