@@ -32,7 +32,7 @@ import 'es6-promise/auto';
 
 export default {
     install(Vue) {
-        Vue.use(ElementUI);
+        Vue.use(ElementUI, { locale });
         Vue.use(GlobalComponents);
         Vue.use(GlobalDirectives);
         Vue.use(SideBar);

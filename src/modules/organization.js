@@ -72,7 +72,7 @@ export const organization = {
             OrganizationAPI.store(
                 data.name,
                 data.legal_organization,
-                data.primany_contact,
+                data.primary_contact,
                 data.secondary_contact,
                 data.organization_type,
                 data.website,
@@ -82,6 +82,7 @@ export const organization = {
                 data.requests,
                 data.camps,
                 data.notes,
+                data._attachments,
                 data.created_by,
                 data.created_at,
                 data.updated_at
@@ -101,7 +102,7 @@ export const organization = {
                 data._rev,
                 data.name,
                 data.legal_organization,
-                data.primany_contact,
+                data.primary_contact,
                 data.secondary_contact,
                 data.organization_type,
                 data.website,
@@ -111,6 +112,7 @@ export const organization = {
                 data.requests,
                 data.camps,
                 data.notes,
+                data._attachments,
                 data.created_by,
                 data.created_at,
                 data.updated_at,

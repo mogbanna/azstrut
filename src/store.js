@@ -16,13 +16,17 @@ Vue.use(Vuex);
     Imports all of the modules used in the application to build the data store.
 */
 import { user } from './modules/user';
+import { organization } from './modules/organization';
+import { organizationType } from './modules/organizationType';
 
 /* 
 Exports our data store.
 */
 export default new Vuex.Store({
     modules: {
-        user
+        user,
+        organization,
+        organizationType
     },
     plugins: [
         createPersistedState()

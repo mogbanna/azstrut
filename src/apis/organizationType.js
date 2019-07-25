@@ -5,18 +5,18 @@ import { CONFIG } from '../config';
 
 export default {
     index: function() {
-        return CONFIG.LOCAL_DB.get('PRODUCT_CATEGORIES');
+        return CONFIG.LOCAL_DB.get('ORGANIZATION_TYPES');
     },
 
     update: function(
         _rev,
-        categories,
-        _id = 'PRODUCT_CATEGORIES'
+        types,
+        _id = 'ORGANIZATION_TYPES'
     ) {
         return CONFIG.LOCAL_DB.put({
             _id,
             _rev,
-            categories
+            types
         });
     }
 }

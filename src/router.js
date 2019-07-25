@@ -1,9 +1,45 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import Vue from 'vue';
+import Router from 'vue-router';
+import store from './store';
 
-import DashboardLayout from './layouts/Dashboard/DashboardLayout.vue'
+import DashboardLayout from './layouts/Dashboard/DashboardLayout.vue';
 
-Vue.use(Router)
+Vue.use(Router);
+
+/*
+	This will check to see if the user is authenticated or not.
+*/
+function requireAuth(to, from, next) {
+    /*
+    	Determines where we should send the user.
+    */
+    function proceed() {
+        /*
+        if there is no internent connection `
+        and no session saved in storage
+		*/
+        //if (!navigator.onLine && !localStorage.getItem('session')) {
+        //    next({ path: '/no-connection' });
+        //}
+
+        /*
+        If the user is not empty, that means there's a user
+        authenticated we allow them to continue. Otherwise, we
+        send the user back to the home page.
+        */
+        if (store.getters.getUserSession.userCtx.name) {
+            next();
+        } else {
+            /**
+             * user is not logged in'
+             * redirect to login page
+             */
+            next({ path: '/login' });
+        }
+    }
+
+    proceed();
+}
 
 const router = new Router({
     routes: [{
@@ -18,6 +54,7 @@ const router = new Router({
             children: [{
                     path: '',
                     name: 'Dashboard',
+                    beforeEnter: requireAuth,
                     components: {
                         default: () =>
                             import ('./views/Dashboard/Dashboard/Dashboard.vue'),
@@ -28,6 +65,7 @@ const router = new Router({
                 {
                     path: 'organizations',
                     name: 'Organizations',
+                    beforeEnter: requireAuth,
                     components: {
                         default: () =>
                             import ('./views/Organizations/App.vue'),
@@ -64,7 +102,6 @@ const router = new Router({
                                 },
                                 {
                                     path: 'view/:organizationId',
-                                    alias: '/organizations/view',
                                     name: 'ViewOrganization',
                                     component: () =>
                                         import ('./pages/Organizations/Organization/View.vue'),
@@ -104,6 +141,8 @@ const router = new Router({
                 },
                 {
                     path: '/tech-requests',
+                    name: 'Tech Requests',
+                    beforeEnter: requireAuth,
                     component: {
                         default: () =>
                             import ('./views/TechRequests/App.vue'),
@@ -214,6 +253,30 @@ const router = new Router({
         }
     ],
     linkActiveClass: 'active'
+});
+
+router.beforeEach((to, from, next) => {
+    /*let cont = true;
+    let onlyAdminPaths = [];
+    let st = store;
+
+    /**
+     * make sure only admins are allowed to navigate to this route
+     */
+
+    /*if(onlyAdminPaths.length > 0 && (onlyAdminPaths.includes(to.name) || onlyAdminPaths.includes(to.meta.name)) && 
+        st.getters.getUserSession.userCtx.roles.indexOf('_admin') === -1) {
+        cont = false;
+    }
+
+    if(cont) {
+        next();
+    } else {
+        next('/');
+    }*/
+    store.dispatch('loadUserSession');
+    //console.log("to ", to, " from ", from)
+    next();
 });
 
 export default router;

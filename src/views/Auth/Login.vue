@@ -73,7 +73,7 @@ export default {
       loginUserLoadStatus: function(val) {
           if(val == 2) {
               this.$router.push({
-                  name: 'Dashboard'
+                  path: '/dashboard'
               });
           }
       }
