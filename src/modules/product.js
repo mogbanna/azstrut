@@ -25,7 +25,7 @@ export const product = {
         decProQuantityResponse: {}
     },
     actions: {
-        loadProducts: function({commit}, data) {
+        loadProducts: function({ commit }, data) {
             commit('setProductsLoadStatus', 1);
 
             ProductAPI.index(
@@ -40,7 +40,7 @@ export const product = {
                 commit('setProducts', []);
             });
         },
-        loadProduct: function({commit}, data) {
+        loadProduct: function({ commit }, data) {
             commit('setProductLoadStatus', 1);
 
             ProductAPI.show(
@@ -53,7 +53,7 @@ export const product = {
                 commit('setProduct', response);
             });
         },
-        searchProducts: function({commit}, data) {
+        searchProducts: function({ commit }, data) {
             commit('setProductsLoadStatus', 1);
 
             ProductAPI.search(
@@ -69,7 +69,7 @@ export const product = {
                 commit('setProducts', []);
             });
         },
-        addProduct: function({commit}, data) {
+        addProduct: function({ commit }, data) {
             commit('setAddProductLoadStatus', 1);
 
             ProductAPI.store(
@@ -100,7 +100,7 @@ export const product = {
                 commit('setAddProductResponse', response);
             });
         },
-        updateProduct: function({commit}, data) {
+        updateProduct: function({ commit }, data) {
             commit('setUpdateProductLoadStatus', 1);
             ProductAPI.update(
                 data._id,
@@ -113,7 +113,7 @@ export const product = {
                 data.manufacturer,
                 data.can_be,
                 data.unit,
-                data.supplier, 
+                data.supplier,
                 data.cost_price,
                 data.selling_price,
                 data.promo_price,
@@ -134,7 +134,7 @@ export const product = {
                 commit('setUpdateProductResponse', response);
             });
         },
-        deleteProduct: function({commit}, data) {
+        deleteProduct: function({ commit }, data) {
             commit('setDeleteProductLoadStatus', 1);
 
             ProductAPI.destroy(
@@ -147,7 +147,7 @@ export const product = {
                 commit('setDeleteProductResponse', response);
             });
         },
-        incProQuantity: function({commit}, data) {
+        incProQuantity: function({ commit }, data) {
             commit('setIncProQuantityLoadStatus', 1);
 
             ProductAPI.increaseQuantity(
@@ -161,7 +161,7 @@ export const product = {
                 commit('setIncProQuantityResponse', response);
             });
         },
-        decProQuantity: function({commit}, data) {
+        decProQuantity: function({ commit }, data) {
             commit('setDecProQuantityLoadStatus', 1);
 
             ProductAPI.decreaseQuantity(

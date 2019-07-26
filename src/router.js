@@ -54,6 +54,7 @@ const router = new Router({
             children: [{
                     path: '',
                     name: 'Dashboard',
+                    alias: '/dashboard-main',
                     beforeEnter: requireAuth,
                     components: {
                         default: () =>

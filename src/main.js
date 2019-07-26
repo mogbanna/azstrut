@@ -4,7 +4,6 @@ import router from './router';
 import store from './store';
 import './registerServiceWorker';
 import DashboardPlugin from './dashboard-plugin';
-import './plugins/element.js'
 
 Vue.use(DashboardPlugin);
 /**

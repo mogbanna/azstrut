@@ -4,7 +4,7 @@
     <side-bar>
       <template slot-scope="props" slot="links">
         <user-menu></user-menu>
-        <sidebar-item :link="{name: 'Dashboard', icon: 'now-ui-icons design_app', path: '/dashboard'}">
+        <sidebar-item :link="{name: 'Dashboard', icon: 'now-ui-icons design_app', path: '/dashboard-main'}">
         </sidebar-item>
         <sidebar-item :link="{name: 'Organizations', icon: 'now-ui-icons design_image'}">
             <sidebar-item :link="{name: 'Overview', path: '/organizations/dashboard'}"></sidebar-item>

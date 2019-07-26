@@ -10,7 +10,7 @@ export default {
         skip,
         include_docs = true
     ) {
-        return CONFIG.LOCAL_DB.query('products',{
+        return CONFIG.LOCAL_DB.query('products', {
             limit: limit,
             descending: descending,
             skip: skip,
@@ -28,13 +28,13 @@ export default {
         return CONFIG.LOCAL_DB.search({
             query: query,
             fields: fields,
-            filter: function (doc) {
+            filter: function(doc) {
                 return doc.type === 'product'; // only index persons
             },
             limit: limit,
             skip: skip,
             include_docs: include_docs
-        }); 
+        });
     },
 
     store: function(

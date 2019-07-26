@@ -3,20 +3,20 @@
        :data-color="backgroundColor">
 
     <div class="logo">
-      <a href="http://www.creative-tim.com" class="simple-text logo-mini">
+      <!-- <a href="http://www.creative-tim.com" class="simple-text logo-mini"> -->
         <div class="logo-image">
           <img :src="logo">
         </div>
-      </a>
+      <!-- </a> -->
 
-      <a href="http://www.creative-tim.com" class="simple-text logo-normal">
+      <!-- <a href="http://www.creative-tim.com" class="simple-text logo-normal">
         {{title}}
-      </a>
+      </a> -->
       <div class="navbar-minimize">
-        <button id="minimizeSidebar" class="btn btn-simple btn-icon btn-neutral btn-round" @click="minimizeSidebar">
+        <!-- <button id="minimizeSidebar" class="btn btn-simple btn-icon btn-neutral btn-round" @click="minimizeSidebar">
           <i class="now-ui-icons text_align-center visible-on-sidebar-regular"></i>
           <i class="now-ui-icons design_bullet-list-67 visible-on-sidebar-mini"></i>
-        </button>
+        </button> -->
       </div>
     </div>
     <div class="sidebar-wrapper" ref="sidebarScrollArea">
@@ -44,7 +44,7 @@ export default {
   props: {
     title: {
       type: String,
-      default: 'Vue NUD PRO'
+      default: 'AZStrut'
     },
     backgroundColor: {
       type: String,
@@ -65,7 +65,7 @@ export default {
     },
     logo: {
       type: String,
-      default: 'img/icon-vue.png'
+      default: 'img/logoSM.png'
     },
     sidebarLinks: {
       type: Array,

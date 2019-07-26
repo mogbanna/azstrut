@@ -60,7 +60,8 @@ export default {
   },
   data() {
     return {
-      isClosed: true
+      isClosed: true,
+      active_user: {}
     };
   },
   methods: {

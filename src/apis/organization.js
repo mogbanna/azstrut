@@ -8,24 +8,15 @@ export default {
         limit,
         descending,
         skip,
-        flag = null,
         include_docs = true
     ) {
-        if (flag) {
-            return CONFIG.LOCAL_DB.query(flag, {
-                limit: limit,
-                descending: descending,
-                skip: skip,
-                include_docs: include_docs
-            });
-        } else {
-            return CONFIG.LOCAL_DB.query('organizations', {
-                limit: limit,
-                descending: descending,
-                skip: skip,
-                include_docs: include_docs
-            });
-        }
+        return CONFIG.LOCAL_DB.query('organizations', {
+            limit: limit,
+            descending: descending,
+            skip: skip,
+            include_docs: include_docs
+        });
+
     },
 
     search: function(
@@ -57,6 +48,7 @@ export default {
         requests,
         camps,
         notes,
+        thumbnail_name,
         _attachments,
         created_by,
         created_at,
@@ -77,6 +69,7 @@ export default {
             requests,
             camps,
             notes,
+            thumbnail_name,
             _attachments,
             created_by,
             created_at,
@@ -105,6 +98,7 @@ export default {
         requests,
         camps,
         notes,
+        thumbnail_name,
         _attachments,
         created_by,
         created_at,
@@ -127,6 +121,7 @@ export default {
             requests,
             camps,
             notes,
+            thumbnail_name,
             _attachments,
             created_by,
             created_at,

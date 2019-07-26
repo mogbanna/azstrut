@@ -27,8 +27,7 @@ export const organization = {
             OrganizationAPI.index(
                 data.limit,
                 data.descending,
-                data.skip,
-                data.flag = null
+                data.skip
             ).then(function(response) {
                 commit('setOrganizationsLoadStatus', 2);
                 commit('setOrganizations', response);
@@ -82,6 +81,7 @@ export const organization = {
                 data.requests,
                 data.camps,
                 data.notes,
+                data.thumbnail_name,
                 data._attachments,
                 data.created_by,
                 data.created_at,
@@ -112,6 +112,7 @@ export const organization = {
                 data.requests,
                 data.camps,
                 data.notes,
+                data.thumbnail_name,
                 data._attachments,
                 data.created_by,
                 data.created_at,

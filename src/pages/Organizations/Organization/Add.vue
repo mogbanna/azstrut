@@ -172,7 +172,7 @@
                                                 :on-change="handlePreview"
                                                 :auto-upload="false"
                                                 :show-file-list="false">
-                                        <img v-if="imageUrl" :src="imageUrl" class="picture-src">
+                                        <img v-if="imageUrl" :src="imageUrl" class="avatar border-gray picture-src">
                                     </el-upload>
                                     <h6 class="description">Choose Picture</h6>
                                     </div>
@@ -291,6 +291,7 @@ export default {
                 },
                 requests: [],
                 camps: [],
+                thumbnail_name: '',
                 _attachments: {},
                 notes: 'This organization is Too Cool',
                 created_by: {},
@@ -341,11 +342,6 @@ export default {
                 console.log('We added it!');
             }
         }
-        // form: function(oldV, newV){
-        //     console.log(newV.organization_type);
-
-        // },
-        // deep: true
     },
     methods: {
         addMedia(link){
@@ -403,7 +399,7 @@ export default {
                             'data'
                         ] = this.upLoadName.raw;
                     }
-                    //check that
+                    this.form.thumbnail_name = this.upLoadName.name;
 
                     console.log(this.form);
                     console.log("adding organization to DB...");
