@@ -1,8 +1,8 @@
 <template>
   <div class="row">
-    <div class="col-12">
+    <div class="col-12" v-loading="organizationsLoadStatus == 1">
       <card card-body-classes="table-full-width" no-footer-line>
-        <h4 slot="header" class="card-title">Paginated Tables</h4>
+        <h4 slot="header" class="card-title">Organizations</h4>
         <div>
           <div class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap">
             <el-select
@@ -36,7 +36,7 @@
                     style="width: 100%;"
                     :data="queriedData"
                     @current-change="handleCurrentChange"
-                    @selection-chang="handleSelectionChange">
+                    @selection-change="handleSelectionChange">
             <el-table-column v-for="column in tableColumns"
                              :key="column.label"
                              :min-width="column.minWidth"

@@ -17,9 +17,9 @@ import SideBar from './components/SidebarPlugin';
 // import lang from 'element-ui/lib/locale/lang/en';
 // import locale from 'element-ui/lib/locale';
 // locale.use(lang);
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
-import locale from 'element-ui/lib/locale/lang/en';
+// import ElementUI from 'element-ui';
+// import 'element-ui/lib/theme-chalk/index.css';
+// import locale from 'element-ui/lib/locale/lang/en';
 
 
 // asset imports
@@ -32,7 +32,7 @@ import 'es6-promise/auto';
 
 export default {
     install(Vue) {
-        Vue.use(ElementUI, { locale });
+        // Vue.use(ElementUI, { locale });
         Vue.use(GlobalComponents);
         Vue.use(GlobalDirectives);
         Vue.use(SideBar);

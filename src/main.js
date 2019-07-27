@@ -6,6 +6,8 @@ import './registerServiceWorker';
 import DashboardPlugin from './dashboard-plugin';
 
 Vue.use(DashboardPlugin);
+
+
 /**
  * https://www.npmjs.com/package/vue-json-excel
  */
@@ -18,6 +20,13 @@ Vue.use(DashboardPlugin);
 // import Print from 'vue-print-nb';
 // Vue.use(Print);
 
+import ElementUI from 'element-ui';
+import lang from 'element-ui/lib/locale/lang/en';
+import locale from 'element-ui/lib/locale';
+import MessageBox from 'element-ui';
+locale.use(lang);
+
+Vue.prototype.$msgbox = MessageBox;
 
 Vue.config.productionTip = false
 

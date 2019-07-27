@@ -141,10 +141,10 @@ const router = new Router({
                     ]
                 },
                 {
-                    path: '/tech-requests',
+                    path: 'tech-requests',
                     name: 'Tech Requests',
                     beforeEnter: requireAuth,
-                    component: {
+                    components: {
                         default: () =>
                             import ('./views/TechRequests/App.vue'),
                         header: () =>
