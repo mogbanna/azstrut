@@ -23,10 +23,10 @@ Vue.use(DashboardPlugin);
 import ElementUI from 'element-ui';
 import lang from 'element-ui/lib/locale/lang/en';
 import locale from 'element-ui/lib/locale';
-import MessageBox from 'element-ui';
+// import MessageBox from 'element-ui';
 locale.use(lang);
 
-Vue.prototype.$msgbox = MessageBox;
+// Vue.prototype.$msgbox = MessageBox;
 
 Vue.config.productionTip = false
 

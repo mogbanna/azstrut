@@ -18,9 +18,9 @@ function requireAuth(to, from, next) {
         if there is no internent connection `
         and no session saved in storage
 		*/
-        //if (!navigator.onLine && !localStorage.getItem('session')) {
-        //    next({ path: '/no-connection' });
-        //}
+        if (!navigator.onLine && !localStorage.getItem('session')) {
+            next({ path: '/no-connection' });
+        }
 
         /*
         If the user is not empty, that means there's a user
@@ -50,6 +50,7 @@ const router = new Router({
         },
         {
             path: '/dashboard',
+            beforeEnter: requireAuth,
             component: DashboardLayout,
             children: [{
                     path: '',

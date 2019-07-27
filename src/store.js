@@ -18,7 +18,7 @@ Vue.use(Vuex);
 import { user } from './modules/user';
 import { organization } from './modules/organization';
 import { organizationType } from './modules/organizationType';
-import { tech_request } from './modules/tech_request';
+import { techRequest } from './modules/tech_request';
 
 /* 
 Exports our data store.
@@ -28,7 +28,7 @@ export default new Vuex.Store({
         user,
         organization,
         organizationType,
-        tech_request
+        techRequest
     },
     plugins: [
         createPersistedState()

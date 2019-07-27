@@ -1,3 +1,8 @@
 <template>
-<p>Organization Dashboard</p>
+    <p>Organizations DASH</p>
 </template>
+<script>
+export default {
+    
+}
+</script>

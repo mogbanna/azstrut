@@ -45,8 +45,6 @@ export default {
         social_media,
         ein,
         acc_file,
-        requests,
-        camps,
         notes,
         thumbnail_name,
         _attachments,

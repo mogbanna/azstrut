@@ -1,76 +1,76 @@
 /*
 |-------------------------------------------------------------------------------
-| VUEX modules/tech_request.js
+| VUEX modules/techRequest.js
 |-------------------------------------------------------------------------------
-| The Vuex data tech_request for the tech_request
+| The Vuex data techRequest for the techRequest
 */
 
-import RequestAPI from '../apis/tech_request';
+import TechRequestAPI from '../apis/tech_request';
 
-export const tech_request = {
+export const techRequest = {
     state: {
-        tech_requests: [],
-        tech_requestsLoadStatus: 0,
-        tech_request: {},
-        tech_requestLoadStatus: 0,
-        addRequestLoadStatus: 0,
-        addRequestResponse: {},
-        updateRequestLoadStatus: 0,
-        updateRequestResponse: {},
-        deleteRequestLoadStatus: 0,
-        deleteRequestResponse: {},
-        completeRequestLoadStatus: 0,
-        completeRequestResponse: {}
+        techRequests: [],
+        techRequestsLoadStatus: 0,
+        techRequest: {},
+        techRequestLoadStatus: 0,
+        addTechRequestLoadStatus: 0,
+        addTechRequestResponse: {},
+        updateTechRequestLoadStatus: 0,
+        updateTechRequestResponse: {},
+        deleteTechRequestLoadStatus: 0,
+        deleteTechRequestResponse: {},
+        completeTechRequestLoadStatus: 0,
+        completeTechRequestResponse: {}
     },
     actions: {
-        loadRequests: function({ commit }, data) {
-            commit('setRequestsLoadStatus', 1);
+        loadTechRequests: function({ commit }, data) {
+            commit('setTechRequestsLoadStatus', 1);
 
-            RequestAPI.index(
+            TechRequestAPI.index(
                 data.limit,
                 data.descending,
                 data.skip
             ).then(function(response) {
-                commit('setRequestsLoadStatus', 2);
-                commit('setRequests', response);
+                commit('setTechRequestsLoadStatus', 2);
+                commit('setTechRequests', response);
             }).catch(function(response) {
-                commit('setRequestsLoadStatus', 3);
-                commit('setRequests', []);
+                commit('setTechRequestsLoadStatus', 3);
+                commit('setTechRequests', []);
             });
         },
-        loadRequest: function({ commit }, data) {
-            commit('setRequestLoadStatus', 1);
+        loadTechRequest: function({ commit }, data) {
+            commit('setTechRequestLoadStatus', 1);
 
-            RequestAPI.show(
+            TechRequestAPI.show(
                 data.id
             ).then(function(response) {
-                commit('setRequestLoadStatus', 2);
-                commit('setRequest', response);
+                commit('setTechRequestLoadStatus', 2);
+                commit('setTechRequest', response);
             }).catch(function(response) {
-                commit('setRequestLoadStatus', 3);
-                commit('setRequest', response);
+                commit('setTechRequestLoadStatus', 3);
+                commit('setTechRequest', response);
             });
         },
-        searchRequests: function({ commit }, data) {
-            commit('setRequestsLoadStatus', 1);
+        searchTechRequests: function({ commit }, data) {
+            commit('setTechRequestsLoadStatus', 1);
 
-            RequestAPI.search(
+            TechRequestAPI.search(
                 data.query,
                 data.fields,
                 data.limit,
                 data.skip
             ).then(function(response) {
-                commit('setRequestsLoadStatus', 2);
-                commit('setRequests', response);
+                commit('setTechRequestsLoadStatus', 2);
+                commit('setTechRequests', response);
             }).catch(function() {
-                commit('setRequestsLoadStatus', 3);
-                commit('setRequests', []);
+                commit('setTechRequestsLoadStatus', 3);
+                commit('setTechRequests', []);
             });
         },
-        addRequest: function({ commit }, data) {
-            commit('setAddRequestLoadStatus', 1);
+        addTechRequest: function({ commit }, data) {
+            commit('setAddTechRequestLoadStatus', 1);
 
-            RequestAPI.store(
+            TechRequestAPI.store(
                 data.organization,
                 data.num_desktops,
                 data.num_laptops,
@@ -82,16 +82,16 @@ export const tech_request = {
                 data.updated_by,
                 data.completed_at
             ).then(function(response) {
-                commit('setAddRequestLoadStatus', 2);
-                commit('setAddRequestResponse', response);
+                commit('setAddTechRequestLoadStatus', 2);
+                commit('setAddTechRequestResponse', response);
             }).catch(function(response) {
-                commit('setAddRequestLoadStatus', 3);
-                commit('setAddRequestResponse', response);
+                commit('setAddTechRequestLoadStatus', 3);
+                commit('setAddTechRequestResponse', response);
             });
         },
-        updateRequest: function({ commit }, data) {
-            commit('setUpdateRequestLoadStatus', 1);
-            RequestAPI.update(
+        updateTechRequest: function({ commit }, data) {
+            commit('setUpdateTechRequestLoadStatus', 1);
+            TechRequestAPI.update(
                 data._id,
                 data._rev,
                 data.organization,
@@ -106,117 +106,117 @@ export const tech_request = {
                 data.completed_at,
                 data.type
             ).then(function(response) {
-                commit('setUpdateRequestLoadStatus', 2);
-                commit('setUpdateRequestResponse', response);
+                commit('setUpdateTechRequestLoadStatus', 2);
+                commit('setUpdateTechRequestResponse', response);
             }).catch(function(response) {
-                commit('setUpdateRequestLoadStatus', 3);
-                commit('setUpdateRequestResponse', response);
+                commit('setUpdateTechRequestLoadStatus', 3);
+                commit('setUpdateTechRequestResponse', response);
             });
         },
-        completeRequest: function({ commit }, data) {
-            commit('setCompleteRequestLoadStatus', 1);
+        completeTechRequest: function({ commit }, data) {
+            commit('setCompleteTechRequestLoadStatus', 1);
 
-            RequestAPI.completeRequest(
+            TechRequestAPI.completeTechRequest(
                 data.id,
                 data.status,
                 data.distribution,
                 data.completed_by
             ).then(function(response) {
-                commit('setCompleteRequestLoadStatus', 2);
-                commit('setCompleteRequestResponse', response);
+                commit('setCompleteTechRequestLoadStatus', 2);
+                commit('setCompleteTechRequestResponse', response);
             }).catch(function(response) {
-                commit('setCompleteRequestLoadStatus', 3);
-                commit('setCompleteRequestResponse', response);
+                commit('setCompleteTechRequestLoadStatus', 3);
+                commit('setCompleteTechRequestResponse', response);
             });
         },
-        deleteRequest: function({ commit }, data) {
-            commit('setDeleteRequestLoadStatus', 1);
+        deleteTechRequest: function({ commit }, data) {
+            commit('setDeleteTechRequestLoadStatus', 1);
 
-            RequestAPI.destroy(
+            TechRequestAPI.destroy(
                 data.id
             ).then(function(response) {
-                commit('setDeleteRequestLoadStatus', 2);
-                commit('setDeleteRequestResponse', response);
+                commit('setDeleteTechRequestLoadStatus', 2);
+                commit('setDeleteTechRequestResponse', response);
             }).catch(function(response) {
-                commit('setDeleteRequestLoadStatus', 2);
-                commit('setDeleteRequestResponse', response);
+                commit('setDeleteTechRequestLoadStatus', 2);
+                commit('setDeleteTechRequestResponse', response);
             });
         }
     },
     mutations: {
-        setRequests(state, tech_requests) {
-            state.tech_requests = tech_requests;
+        setTechRequests(state, techRequests) {
+            state.techRequests = techRequests;
         },
-        setRequestsLoadStatus(state, status) {
-            state.tech_requestsLoadStatus = status;
+        setTechRequestsLoadStatus(state, status) {
+            state.techRequestsLoadStatus = status;
         },
-        setRequest(state, tech_request) {
-            state.tech_request = tech_request;
+        setTechRequest(state, techRequest) {
+            state.techRequest = techRequest;
         },
-        setRequestLoadStatus(state, status) {
-            state.tech_requestLoadStatus = status;
+        setTechRequestLoadStatus(state, status) {
+            state.techRequestLoadStatus = status;
         },
-        setAddRequestLoadStatus(state, status) {
-            state.addRequestLoadStatus = status;
+        setAddTechRequestLoadStatus(state, status) {
+            state.addTechRequestLoadStatus = status;
         },
-        setAddRequestResponse(state, response) {
-            state.addRequestResponse = response;
+        setAddTechRequestResponse(state, response) {
+            state.addTechRequestResponse = response;
         },
-        setUpdateRequestLoadStatus(state, status) {
-            state.updateRequestLoadStatus = status;
+        setUpdateTechRequestLoadStatus(state, status) {
+            state.updateTechRequestLoadStatus = status;
         },
-        setUpdateRequestResponse(state, response) {
-            state.updateRequestResponse = response;
+        setUpdateTechRequestResponse(state, response) {
+            state.updateTechRequestResponse = response;
         },
-        setDeleteRequestLoadStatus(state, status) {
-            state.deleteRequestLoadStatus = status;
+        setDeleteTechRequestLoadStatus(state, status) {
+            state.deleteTechRequestLoadStatus = status;
         },
-        setDeleteRequestResponse(state, response) {
-            state.deleteRequestResponse = response;
+        setDeleteTechRequestResponse(state, response) {
+            state.deleteTechRequestResponse = response;
         },
-        setCompleteRequestLoadStatus(state, status) {
-            state.completeRequestLoadStatus = status;
+        setCompleteTechRequestLoadStatus(state, status) {
+            state.completeTechRequestLoadStatus = status;
         },
-        setCompleteRequestResponse(state, response) {
-            state.completeRequestResponse = response;
+        setCompleteTechRequestResponse(state, response) {
+            state.completeTechRequestResponse = response;
         }
     },
     getters: {
-        getRequests(state) {
-            return state.tech_requests;
+        getTechRequests(state) {
+            return state.techRequests;
         },
-        getRequestsLoadStatus(state) {
-            return state.tech_requestsLoadStatus;
+        getTechRequestsLoadStatus(state) {
+            return state.techRequestsLoadStatus;
         },
-        getRequest(state) {
-            return state.tech_request;
+        getTechRequest(state) {
+            return state.techRequest;
         },
-        getRequestLoadStatus(state) {
-            return state.tech_requestLoadStatus;
+        getTechRequestLoadStatus(state) {
+            return state.techRequestLoadStatus;
         },
-        getAddRequestLoadStatus(state) {
-            return state.addRequestLoadStatus;
+        getAddTechRequestLoadStatus(state) {
+            return state.addTechRequestLoadStatus;
         },
-        getAddRequestResponse(state) {
-            return state.addRequestResponse;
+        getAddTechRequestResponse(state) {
+            return state.addTechRequestResponse;
         },
-        getUpdateRequestLoadStatus(state) {
-            return state.updateRequestLoadStatus;
+        getUpdateTechRequestLoadStatus(state) {
+            return state.updateTechRequestLoadStatus;
         },
-        getUpdateRequestResponse(state) {
-            return state.updateRequestResponse;
+        getUpdateTechRequestResponse(state) {
+            return state.updateTechRequestResponse;
         },
-        getDeleteRequestLoadStatus(state) {
-            return state.deleteRequestLoadStatus;
+        getDeleteTechRequestLoadStatus(state) {
+            return state.deleteTechRequestLoadStatus;
         },
-        getDeleteRequestResponse(state) {
-            return state.deleteRequestResponse;
+        getDeleteTechRequestResponse(state) {
+            return state.deleteTechRequestResponse;
         },
-        getCompleteRequestLoadStatus(state) {
-            return state.completeRequestLoadStatus;
+        getCompleteTechRequestLoadStatus(state) {
+            return state.completeTechRequestLoadStatus;
         },
-        getCompleteRequestResponse(state) {
-            return state.completeRequestResponse;
+        getCompleteTechRequestResponse(state) {
+            return state.completeTechRequestResponse;
         }
     }
 };
