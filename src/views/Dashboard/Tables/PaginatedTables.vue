@@ -82,153 +82,159 @@
   </div>
 </template>
 <script>
-import { Table, TableColumn, Select, Option } from 'element-ui';
-import { Pagination as NPagination } from '@/components';
+import {
+    Table,
+    TableColumn,
+    Select,
+    Option
+} from 'element-ui';
+import {
+    Pagination as NPagination
+} from '@/components';
 import users from './users';
 import Fuse from 'fuse.js';
 import swal from 'sweetalert2';
 
 export default {
-  components: {
-    NPagination,
-    [Select.name]: Select,
-    [Option.name]: Option,
-    [Table.name]: Table,
-    [TableColumn.name]: TableColumn
-  },
-  computed: {
-    /***
-     * Returns a page from the searched data or the whole data. Search is performed in the watch section below
-     */
-    queriedData() {
-      let result = this.tableData;
-      if (this.searchedData.length > 0) {
-        result = this.searchedData;
-      }
-      return result.slice(this.from, this.to);
+    components: {
+        NPagination,
+        [Select.name]: Select,
+        [Option.name]: Option,
+        [Table.name]: Table,
+        [TableColumn.name]: TableColumn
     },
-    to() {
-      let highBound = this.from + this.pagination.perPage;
-      if (this.total < highBound) {
-        highBound = this.total;
-      }
-      return highBound;
-    },
-    from() {
-      return this.pagination.perPage * (this.pagination.currentPage - 1);
-    },
-    total() {
-      return this.searchedData.length > 0
-        ? this.searchedData.length
-        : this.tableData.length;
-    }
-  },
-  data() {
-    return {
-      pagination: {
-        perPage: 5,
-        currentPage: 1,
-        perPageOptions: [5, 10, 25, 50],
-        total: 0
-      },
-      searchQuery: '',
-      propsToSearch: ['name', 'email', 'age'],
-      tableColumns: [
-        {
-          prop: 'name',
-          label: 'Name',
-          minWidth: 200
+    computed: {
+        /***
+         * Returns a page from the searched data or the whole data. Search is performed in the watch section below
+         */
+        queriedData() {
+            let result = this.tableData;
+            if (this.searchedData.length > 0) {
+                result = this.searchedData;
+            }
+            return result.slice(this.from, this.to);
         },
-        {
-          prop: 'email',
-          label: 'Email',
-          minWidth: 250
+        to() {
+            let highBound = this.from + this.pagination.perPage;
+            if (this.total < highBound) {
+                highBound = this.total;
+            }
+            return highBound;
         },
-        {
-          prop: 'age',
-          label: 'Age',
-          minWidth: 100
+        from() {
+            return this.pagination.perPage * (this.pagination.currentPage - 1);
         },
-        {
-          prop: 'salary',
-          label: 'Salary',
-          minWidth: 120
+        total() {
+            return this.searchedData.length > 0 ?
+                this.searchedData.length :
+                this.tableData.length;
         }
-      ],
-      tableData: users,
-      searchedData: [],
-      fuseSearch: null
-    };
-  },
-  methods: {
-    handleLike(index, row) {
-      swal({
-        title: `You liked ${row.name}`,
-        buttonsStyling: false,
-        type: 'success',
-        confirmButtonClass: 'btn btn-success btn-fill'
-      });
     },
-    handleEdit(index, row) {
-      swal({
-        title: `You want to edit ${row.name}`,
-        buttonsStyling: false,
-        confirmButtonClass: 'btn btn-info btn-fill'
-      });
+    data() {
+        return {
+            pagination: {
+                perPage: 5,
+                currentPage: 1,
+                perPageOptions: [5, 10, 25, 50],
+                total: 0
+            },
+            searchQuery: '',
+            propsToSearch: ['name', 'email', 'age'],
+            tableColumns: [{
+                    prop: 'name',
+                    label: 'Name',
+                    minWidth: 200
+                },
+                {
+                    prop: 'email',
+                    label: 'Email',
+                    minWidth: 250
+                },
+                {
+                    prop: 'age',
+                    label: 'Age',
+                    minWidth: 100
+                },
+                {
+                    prop: 'salary',
+                    label: 'Salary',
+                    minWidth: 120
+                }
+            ],
+            tableData: users,
+            searchedData: [],
+            fuseSearch: null
+        };
     },
-    handleDelete(index, row) {
-      swal({
-        title: 'Are you sure?',
-        text: `You won't be able to revert this!`,
-        type: 'warning',
-        showCancelButton: true,
-        confirmButtonClass: 'btn btn-success btn-fill',
-        cancelButtonClass: 'btn btn-danger btn-fill',
-        confirmButtonText: 'Yes, delete it!',
-        buttonsStyling: false
-      }).then(result => {
-        if (result.value) {
-          this.deleteRow(row);
-          swal({
-            title: 'Deleted!',
-            text: `You deleted ${row.name}`,
-            type: 'success',
-            confirmButtonClass: 'btn btn-success btn-fill',
-            buttonsStyling: false
-          });
+    methods: {
+        handleLike(index, row) {
+            swal({
+                title: `You liked ${row.name}`,
+                buttonsStyling: false,
+                type: 'success',
+                confirmButtonClass: 'btn btn-success btn-fill'
+            });
+        },
+        handleEdit(index, row) {
+            swal({
+                title: `You want to edit ${row.name}`,
+                buttonsStyling: false,
+                confirmButtonClass: 'btn btn-info btn-fill'
+            });
+        },
+        handleDelete(index, row) {
+            swal({
+                title: 'Are you sure?',
+                text: `You won't be able to revert this!`,
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonClass: 'btn btn-success btn-fill',
+                cancelButtonClass: 'btn btn-danger btn-fill',
+                confirmButtonText: 'Yes, delete it!',
+                buttonsStyling: false
+            }).then(result => {
+                if (result.value) {
+                    this.deleteRow(row);
+                    swal({
+                        title: 'Deleted!',
+                        text: `You deleted ${row.name}`,
+                        type: 'success',
+                        confirmButtonClass: 'btn btn-success btn-fill',
+                        buttonsStyling: false
+                    });
+                }
+            });
+        },
+        deleteRow(row) {
+            let indexToDelete = this.tableData.findIndex(
+                tableRow => tableRow.id === row.id
+            );
+            if (indexToDelete >= 0) {
+                this.tableData.splice(indexToDelete, 1);
+            }
         }
-      });
     },
-    deleteRow(row) {
-      let indexToDelete = this.tableData.findIndex(
-        tableRow => tableRow.id === row.id
-      );
-      if (indexToDelete >= 0) {
-        this.tableData.splice(indexToDelete, 1);
-      }
+    mounted() {
+        // Fuse search initialization.
+        this.fuseSearch = new Fuse(this.tableData, {
+            keys: ['name', 'email'],
+            threshold: 0.3
+        });
+    },
+    watch: {
+        /**
+         * Searches through the table data by a given query.
+         * NOTE: If you have a lot of data, it's recommended to do the search on the Server Side and only display the results here.
+         * @param value of the query
+         */
+        searchQuery(value) {
+            let result = this.tableData;
+            if (value !== '') {
+                result = this.fuseSearch.search(this.searchQuery);
+            }
+            this.searchedData = result;
+        }
     }
-  },
-  mounted() {
-    // Fuse search initialization.
-    this.fuseSearch = new Fuse(this.tableData, {
-      keys: ['name', 'email'],
-      threshold: 0.3
-    });
-  },
-  watch: {
-    /**
-     * Searches through the table data by a given query.
-     * NOTE: If you have a lot of data, it's recommended to do the search on the Server Side and only display the results here.
-     * @param value of the query
-     */
-    searchQuery(value) {
-      let result = this.tableData;
-      if (value !== '') {
-        result = this.fuseSearch.search(this.searchQuery);
-      }
-      this.searchedData = result;
-    }
-  }
 };
 </script>
 <style>

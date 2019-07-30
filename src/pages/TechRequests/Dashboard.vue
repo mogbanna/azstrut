@@ -1,86 +1,107 @@
 <template>
+<div>
+  <el-table
+    :data="tableData"
+    style="width: 100%;margin-bottom: 20px;"
+    row-key="id"
+    border
+    default-expand-all>
+    <el-table-column
+      prop="date"
+      label="date"
+      sortable
+      width="180">
+    </el-table-column>
+    <el-table-column
+      prop="name"
+      label="Name"
+      sortable
+      width="180">
+    </el-table-column>
+  </el-table>
 
-    <div class="row">
-        <el-select
-            v-model="value"
-            filterable
-            remote
-            reserve-keyword
-            placeholder="Please enter a keyword"
-            :remote-method="remoteMethod"
-            :loading="loading">
-            <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-            </el-option>
-        </el-select>
-    </div>
-
+  <el-table
+    :data="tableData1"
+    style="width: 100%"
+    row-key="id"
+    border
+    lazy
+    :load="load"
+    :tree-props="{children: 'kids', hasChildren: 'hasChildren'}">
+    <el-table-column
+      prop="date"
+      label="Date"
+      width="180">
+    </el-table-column>
+    <el-table-column
+      prop="name"
+      label="Name"
+      width="180">
+    </el-table-column>
+  </el-table>
+</div>
 </template>
 <script>
-
-import { Select, Option } from 'element-ui';
-
-export default {
-    components: {
-        [Select.name]: Select,
-        [Option.name]: Option
-    },
-    data() {
-      return {
-        options: [],
-        value: [],
-        list: [],
-        loading: false,
-        states: ["Alabama", "Alaska", "Arizona",
-        "Arkansas", "California", "Colorado",
-        "Connecticut", "Delaware", "Florida",
-        "Georgia", "Hawaii", "Idaho", "Illinois",
-        "Indiana", "Iowa", "Kansas", "Kentucky",
-        "Louisiana", "Maine", "Maryland",
-        "Massachusetts", "Michigan", "Minnesota",
-        "Mississippi", "Missouri", "Montana",
-        "Nebraska", "Nevada", "New Hampshire",
-        "New Jersey", "New Mexico", "New York",
-        "North Carolina", "North Dakota", "Ohio",
-        "Oklahoma", "Oregon", "Pennsylvania",
-        "Rhode Island", "South Carolina",
-        "South Dakota", "Tennessee", "Texas",
-        "Utah", "Vermont", "Virginia",
-        "Washington", "West Virginia", "Wisconsin",
-        "Wyoming"]
-      }
-    },
-    mounted() {
-      this.list = this.states.map(item => {
-        return { value: item, label: item };
-      });
-    },
-    watch: {
-        value: function(val) {
-            if(val){
-                console.log(val);
-
-            }
-        }
-    },
-    methods: {
-      remoteMethod(query) {
-        if (query !== '') {
-          this.loading = true;
-          setTimeout(() => {
-            this.loading = false;
-            this.options = this.list.filter(item => {
-              return item.label.toLowerCase()
-                .indexOf(query.toLowerCase()) > -1;
-            });
-          }, 200);
-        } else {
-          this.options = [];
-        }
-      }
-    }
+  export default {
+      data() {
+          return {
+              tableData: [{
+                  id: 1,
+                  date: '2016-05-02',
+                  name: 'wangxiaohu'
+              }, {
+                  id: 2,
+                  date: '2016-05-04',
+                  name: 'wangxiaohu'
+              }, {
+                  id: 3,
+                  date: '2016-05-01',
+                  name: 'wangxiaohu',
+                  children: [{
+                      id: 31,
+                      date: '2016-05-01',
+                      name: 'wangxiaohu'
+                  }, {
+                      id: 32,
+                      date: '2016-05-01',
+                      name: 'wangxiaohu'
+                  }]
+              }, {
+                  id: 4,
+                  date: '2016-05-03',
+                  name: 'wangxiaohu'
+              }],
+              
+              tableData1: [{
+                  id: 1,
+                  date: '2016-05-02',
+                  name: 'wangxiaohu'
+              }, {
+                  id: 2,
+                  date: '2016-05-04',
+                  name: 'wangxiaohu'
+              }, {
+                  id: 3,
+                  date: '2016-05-01',
+                  name: 'wangxiaohu',
+                  hasChildren: true
+              }, {
+                  id: 4,
+                  date: '2016-05-03',
+                  name: 'wangxiaohu'
+              }],
+              kids: [{
+                  id: 4,
+                  name: 'annaanna'
+              }]
+          }
+      },
+      methods: {
+          load(tree, treeNode, resolve) {
+              setTimeout(() => {
+                  resolve(this.kids)
+              }, 1000)
+          }
+      },
   }
 </script>

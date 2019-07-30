@@ -45,6 +45,8 @@ export default {
         social_media,
         ein,
         acc_file,
+        requests,
+        camps,
         notes,
         thumbnail_name,
         _attachments,
@@ -126,6 +128,22 @@ export default {
             updated_at,
         });
     },
+    // increaseRequests(id, val, type) {
+    //     return CONFIG.LOCAL_DB.get(id).then(function(doc) {
+    //         doc.quantity_in_store = parseFloat(doc.quantity_in_store) + parseFloat(val);
+
+    //         return CONFIG.LOCAL_DB.put(doc);
+    //     });
+    // },
+
+    // decreaseRequests(id, val, type) {
+    //     return CONFIG.LOCAL_DB.get(id).then(function(doc) {
+    //         doc.quantity_in_store = parseFloat(doc.quantity_in_store) - parseFloat(val);
+
+    //         return CONFIG.LOCAL_DB.put(doc);
+    //     });
+    // },
+
 
     destroy: function(id) {
         return CONFIG.LOCAL_DB.get(id).then(function(doc) {

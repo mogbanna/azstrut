@@ -85,19 +85,18 @@
   </div>
 </template>
 <script>
-import { Table, TableColumn, Select, Option } from 'element-ui';
+import { Select, Option } from 'element-ui';
 import { Pagination as NPagination } from '@/components';
 import Fuse from 'fuse.js';
 import swal from 'sweetalert2';
 import moment from 'moment';
 
 export default {
+
   components: {
     NPagination,
     [Select.name]: Select,
-    [Option.name]: Option,
-    [Table.name]: Table,
-    [TableColumn.name]: TableColumn
+    [Option.name]: Option
   },
     data() {
         return {
@@ -132,7 +131,7 @@ export default {
             }
             ],
             loadOptions: {
-                limit: 500,
+                limit: 1000,
                 descending: false,
                 skip: 0
             },
@@ -195,7 +194,7 @@ export default {
                 this.tableData.splice(0, this.tableData.length);
                 this.organizations.rows.forEach(org => {
                     let data = {};
-                    let x = org.value || expense.doc;
+                    let x = org.value || org.doc;
                     data.id = x._id;
                     data.name = x.name.length > 35 ?
                         x.name.substring(0, 35) + '...' : x.name;

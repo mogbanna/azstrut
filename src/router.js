@@ -180,7 +180,7 @@ const router = new Router({
                                     }
                                 },
                                 {
-                                    path: 'view/:requestId',
+                                    path: 'view',
                                     alias: '/tech-requests/view',
                                     name: 'ViewTechRequest',
                                     component: () =>

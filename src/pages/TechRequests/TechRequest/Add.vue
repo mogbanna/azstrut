@@ -261,7 +261,7 @@
    
 </template>
 <script>
-import { Select, Option, Table, TableColumn } from 'element-ui';
+import { Select, Option } from 'element-ui';
 import { Modal } from '@/components'
 import Fuse from 'fuse.js';
 
@@ -269,14 +269,13 @@ export default {
     components: {
         [Select.name]: Select,
         [Option.name]: Option,
-        [Table.name]: Table,
-        [TableColumn.name]: TableColumn,
         Modal
     },
     data() {
         return {
             form: {
                 organization: {
+                    organization_id: '',
                     name: '',
                     legal_organization: '',
                     primary_contact: {
@@ -405,6 +404,7 @@ export default {
     methods: {
         addOrgInfo(org){
             //load information to form
+            this.form.organization.organization_id = org.doc._id;
             this.form.organization.name = org.doc.name;
             this.form.organization.legal_organization = org.doc.legal_organization;
             this.form.organization.primary_contact = org.doc.primary_contact;
