@@ -1,28 +1,76 @@
+<style scoped>
+    #statusTag {
+        border-radius: 0;
+        font-size: 12px;
+        text-align: center;
+        min-width: 50%;
+    }
+</style>
 <template>
     <div class="row">
-        <card card-body-classes="table-full-width" no-footer-line>
-            <el-table
-                :data="tableData"
-                row-key="id"
-                style="width: 100%">
-                    <el-table-column
-                        v-for="column in tableColumns" 
-                        :key="column.label"
-                        :prop="column.prop"
-                        :label="column.label"
-                        :min-width="column.minWidth">
-                    </el-table-column>
-            </el-table>
-        </card>
+        <div class="col-12" v-loading="techRequestsLoadStatus == 1">
+            <card card-body-classes="table-full-width" no-footer-line>
+                <h4 slot="header" class="card-title">Equiptment Requests</h4>
+                <div>
+                    <el-table
+                        ref="displayTable"
+                        :data="tableData"
+                        style="width: 100%;"
+                        @current-change="handleCurrentChange"
+                        @selection-change="handleSelectionChange">
+                            <el-table-column
+                                prop="date"
+                                label="Date"
+                                sortable
+                                min-width="150"
+                                column-key="date"
+                            >
+                                <!-- :filters="[{text: '2016-05-01', value: '2016-05-01'}, {text: '2016-05-02', value: '2016-05-02'}, {text: '2016-05-03', value: '2016-05-03'}, {text: '2016-05-04', value: '2016-05-04'}]"
+                                :filter-method="filterHandler" -->
+                            </el-table-column>
+                            <el-table-column
+                                prop="organization"
+                                label="Organization"
+                                min-width="250"
+                            >
+                            </el-table-column>
+                            <!-- <el-table-column
+                                prop="address"
+                                label="Address"
+                                :formatter="formatter"
+                            >
+                            </el-table-column> -->
+                            <el-table-column
+                                    prop="status"
+                                    label="Status"
+                                    min-width="150"
+                                    :filters="[{ text: 'New', value: 'New' }, { text: 'Under Review', value: 'Under Review' }, { text: 'Approved', value: 'Approved' }, { text: 'Hold', value: 'Hold' }, { text: 'Denied', value: 'Denied' }]"
+                                    :filter-method="filterTag"
+                                    filter-placement="bottom-end"
+                                >
+                                    <template slot-scope="scope">
+                                        <el-tag
+                                        id="statusTag"
+                                        :type="scope.row.status === 'New' ? 'primary' : 'success'"
+                                        disable-transitions>{{scope.row.status}}</el-tag>
+                                    </template>
+                            </el-table-column>
+                    </el-table>
+
+                </div>
+            </card>
+        </div>
     </div>
 </template>
 <script>
+import { Tag } from 'element-ui';
 import { Pagination as NPagination } from '@/components';
 import moment from 'moment';
 
 export default {
     components: {
-        NPagination
+        NPagination,
+        [Tag.name]: Tag
     },
     data() {
         return {
@@ -42,6 +90,11 @@ export default {
                     prop: 'organization',
                     label: 'Organization',
                     minWidth: 250
+                },
+                {
+                    prop: 'status',
+                    label: 'Status',
+                    minWidth: 100
                 }
             ]
             
@@ -62,29 +115,50 @@ export default {
         techRequestsLoadStatus: function(val) {
             if(val == 2) {
 
-                //get tomrrows date as starting point to compare tech request dates
-                let compare_date = moment().add(1, 'day').format('L');
 
                 this.techRequests.rows.forEach(tech => {
                     let temp = {};
-                    temp.id = tech.doc._id;
-                    temp.date = moment(tech.doc.created_at).format('L');
 
-                    if(temp.date < compare_date){
-                        compare_date = temp.date;
-                    }else{
-                        temp.date = '';
-                        temp.children = [];
-                        let t = {};
-                        t.id = tech.doc.organization.name;
-                        t.organization = tech.doc.organization.name;
-                        temp.children.push(t);
-                    }
+                    temp.id = tech.doc._id;
+                    temp.date = moment(tech.doc.created_at).format('LL');
+                    temp.organization = tech.doc.organization.name;
+                    temp.status = tech.doc.status;
+                    // temp.last_note = tech.doc.notes.rows[tech.doc.notes.size];
 
                     this.tableData.push(temp);
                 });
             }
         }
+    },
+    methods: {
+        resetDateFilter() {
+        this.$refs.displayTable.clearFilter('date');
+        },
+        clearFilter() {
+            this.$refs.displayTable.clearFilter();
+        },
+        formatter(row, column) {
+            return row.address;
+        },
+        filterTag(value, row) {
+            return row.tag === value;
+        },
+        filterHandler(value, row, column) {
+            const property = column['property'];
+            return row[property] === value;
+        },
+        setCurrentRow(row) {
+            this.$refs.displayTable.setCurrentRow(row);
+        },
+        handleCurrentChange(row) {
+            this.currentRow = row;
+            this.$router.push({
+                path: '/dashboard/tech-requests/requests/view/' + row.id
+            });
+        },
+        handleSelectionChange(val) {
+            this.displayTable = val;
+        },
     },
 }
 </script>

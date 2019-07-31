@@ -4,16 +4,13 @@
       <nav>
         <ul class="footer-menu">
           <li>
-            <router-link :to="{path:'/dashboard'}">Dashboard</router-link>
+            <router-link :to="{path:'/dashboard'}">Admin Dashboard</router-link>
           </li>
         </ul>
       </nav>
       <div class="copyright">
-        &copy; {{year}}, Designed by
-        <a href="https://www.invisionapp.com/">Invision</a>.
         Coded by
-        <a href="https://binarcode.com" target="_blank" rel="noopener">BinarCode</a>
-        and <a href="https://www.creative-tim.com/?ref=pdf-vuejs" target="_blank" rel="noopener">Creative Tim</a>.
+        <a href="https://github.com/mogbanna" target="_blank" rel="noopener">Mogbanna</a>.
       </div>
     </div>
   </footer>

@@ -1,7 +1,107 @@
+<style scoped>
+    #statusTag {
+        border-radius: 0;
+        font-size: 12px;
+        text-align: center;
+        width: 100%;
+    }
+</style>
+
 <template>
     <div>
         <div class="row justify-content-around">
             <div id="mainCol" class="col-8">
+
+                <!-- BEGIN TODO ROW -->
+                <div class="row" id="toDoRow">
+                    <card class="card-tasks" no-footer-line>
+                        <template slot="header">
+                            <h6 class="title">Todo List</h6>
+                            <p class="category mt-1">Keep a list of what needs to be done next with this Equiptment Request</p>
+                        </template>
+
+                        <div class="table-full-width table-responsive pt-0">
+                            <el-table 
+                                :data="techRequest.todos"
+                                >
+                                    <el-table-column 
+                                        prop="done"
+                                        min-width="15"
+                                        column-key="done"
+                                        >
+                                            <template slot-scope="scope">
+                                                <el-checkbox :checked="scope.row.done" ></el-checkbox>
+                                            </template>
+                                    </el-table-column>
+                                    <el-table-column
+                                        prop="message"
+                                        min-width="100"
+                                        column-key="message"
+                                        >
+                                    </el-table-column>
+                                    <el-table-column
+                                        align="right">
+                                            <template slot-scope="scope">
+                                                <button type="button" rel="tooltip" title=""
+                                                    class="btn btn-danger btn-round btn-icon btn-icon-mini btn-neutral"
+                                                    data-original-title="Remove"
+                                                    @click="removeTodo(scope.$index)">
+                                                <i class="now-ui-icons ui-1_simple-remove"></i>
+                                            </button>
+                                            </template>
+                                    </el-table-column>
+                            </el-table>
+                            
+                            <!-- <n-table 
+                                ref="todoTable"
+                                :data="techRequest.todos"
+                                highlight-current-row
+                                @current-change="handleCurrentChange"
+                                >
+                                    <template slot-scope="{row}">
+                                        <td>
+                                        <checkbox v-model="row.done"></checkbox>
+                                        </td>
+                                        <td class="text-left">{{row.message}}</td>
+                                        <td class="td-actions text-right">
+                                        <button type="button" rel="tooltip" title=""
+                                                class="btn btn-danger btn-round btn-icon btn-icon-mini btn-neutral"
+                                                data-original-title="Remove"
+                                                @click="removeTodo(row)">
+                                            <i class="now-ui-icons ui-1_simple-remove"></i>
+                                        </button>
+                                        </td>
+                                    </template>
+                            </n-table> -->
+                        </div>
+
+                        <template slot="footer">
+                            <hr>
+                            <div class="row">
+                                <div class="col-6">
+                                    <fg-input
+                                        type="text"
+                                        placeholder="New Todo"
+                                        v-model="input.todo">
+
+                                    </fg-input>
+                                </div>
+                                <div class="col-6">
+                                    <button
+                                        type="button"
+                                        class="btn btn-info btn-round btn-icon btn-icon-mini btn-info"
+                                        v-on:click="addTodo(input.todo)">
+                                            <i class="now-ui-icons ui-1_simple-add"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- <i class="now-ui-icons loader_refresh spin"></i> Updated 3 minutes ago -->
+                        </template>
+                    </card>
+                </div>
+                <!-- END TODO ROW -->
+
+                <!-- BEGIN REQUEST INFO ROW -->
                 <div id="requestInfoRow" class="row">
                     <card>
                         <div class="row" slot="header">
@@ -9,7 +109,7 @@
                                 <h5 class="title">Equiptment Request</h5>
                             </div>
                             <div class="col-3 pt-2">
-                                <el-tag style="width: 100%">{{ techRequest.status }}</el-tag>
+                                <el-tag id="statusTag" :type="statusTagColor">{{ techRequest.status }}</el-tag>
                             </div>
                         </div>
                         <div class="card-body">
@@ -189,8 +289,38 @@
 
                 <div class="row">
                     <card>
-                        <div class="header">
+                        <div slot="header">
                             <h6 class="title">Update Status</h6>
+                        </div>
+                        <div class="card-body py-0">
+                            <div class="row">
+                                <n-button 
+                                    type="success" 
+                                    block 
+                                    round
+                                    @click.native="confirmStatusUpdate('Approved')">
+                                    Approve
+                                </n-button>
+                            </div>
+                            <div class="row">
+                                    <n-button 
+                                        class="col" 
+                                        type="warning" 
+                                        block 
+                                        round
+                                        @click.native="confirmStatusUpdate('On Hold')">
+                                        Hold
+                                    </n-button>
+                                    <n-button 
+                                        class="col" 
+                                        type="danger" 
+                                        simple 
+                                        block 
+                                        round
+                                        @click.native="confirmStatusUpdate('Denied')">
+                                        Deny
+                                    </n-button>
+                            </div>
                         </div>
                     </card>
                 </div>
@@ -200,9 +330,11 @@
                             <h6 class="title">Notes</h6>
                             <!-- allow user to submit the note by hitting enter -->
                             <fg-input>
-                                <textarea class="form-control"
-                                        placeholder="Additional notes"
-                                        v-model="input.note">
+                                <textarea 
+                                    v-on:keyup.enter="addNote(input.note)"
+                                    class="form-control"
+                                    placeholder="Additional notes"
+                                    v-model="input.note">
                                 </textarea>
                             </fg-input>
                         </div>
@@ -220,8 +352,11 @@
                                                 :key="index"
                                                 :color="note.color"
                                                 :size="note.size"
-                                                :timestamp="note.submitted_on">
+                                                :timestamp="note.submitted_on"
+                                                placement="top">
                                                 {{note.text}}
+                                                <br>
+                                                <span style="color: #409EFF">-{{ note.submitted_by }}</span>
                                             </el-timeline-item>
                                         </el-timeline>
                             </el-container>
@@ -230,65 +365,6 @@
                 </div>
             </div>
 
-            <!-- BEGIN TODO ROW -->
-            <div class="row" id="toDoRow">
-                <card class="card-tasks" no-footer-line>
-                    <template slot="header">
-                        <h6 class="title">Todo List</h6>
-                        <p class="category">Backend Development</p>
-                    </template>
-
-                    <div class="table-full-width table-responsive">
-                        <n-table 
-                            ref="taskTable"
-                            :data="taskData"
-                            >
-                                <template slot-scope="{row}">
-                                    <td>
-                                    <checkbox v-model="row.done"></checkbox>
-                                    </td>
-                                    <td class="text-left">{{row.message}}</td>
-                                    <td class="td-actions text-right">
-                                    <button type="button" rel="tooltip" title=""
-                                            class="btn btn-info btn-round btn-icon btn-icon-mini btn-neutral"
-                                            data-original-title="Edit Task">
-                                        <i class="now-ui-icons ui-2_settings-90"></i>
-                                    </button>
-                                    <button type="button" rel="tooltip" title=""
-                                            class="btn btn-danger btn-round btn-icon btn-icon-mini btn-neutral"
-                                            data-original-title="Remove">
-                                        <i class="now-ui-icons ui-1_simple-remove"></i>
-                                    </button>
-                                    </td>
-                                </template>
-                        </n-table>
-                    </div>
-
-                    <template slot="footer">
-                        <hr>
-                        <div class="row">
-                            <div class="col-6">
-                                <fg-input
-                                    type="text"
-                                    placeholder="New Todo"
-                                    v-model="input.todo">
-
-                                </fg-input>
-                            </div>
-                            <div class="col-6">
-                                <button
-                                    type="button"
-                                    class="btn btn-info btn-round btn-icon btn-icon-mini btn-info"
-                                    @click.native="addTodo(input.todo)">
-                                        <i class="now-ui-icons ui-1_simple-add"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <!-- <i class="now-ui-icons loader_refresh spin"></i> Updated 3 minutes ago -->
-                    </template>
-                </card>
-            </div>
-            <!-- END TODO ROW -->
         </div>
     </div>
 </template>
@@ -296,7 +372,7 @@
 import {
     StatsCard,
     Table as NTable,
-    Checkbox,
+    // Checkbox,
     Collapse,
     CollapseItem,
     AnimatedNumber
@@ -308,7 +384,9 @@ import {
     TimelineItem,
     Select,
     Option,
-    Tag
+    Tag,
+    Checkbox,
+    Button
 } from 'element-ui';
 
 export default {
@@ -324,15 +402,19 @@ export default {
         [Tag.name]: Tag,
         Collapse,
         CollapseItem,
-        AnimatedNumber
+        AnimatedNumber,
+        [Checkbox.name]: Checkbox,
+        [Button.name]: Button
     },
     data() {
         return { 
+            statusTagColor: "",
             input: {
                 note: "",
                 todo: ""
             },
             techRequest: {
+                created_at: "July 29, 2019",
                 num_laptops: 40,
                 num_desktops: 20,
                 organization: {
@@ -362,66 +444,24 @@ export default {
                 },
                 status: "New",
                 notes: [{
-                    text: "Spoke with Jerry from IT. He said he'd email me the links for the organizatin's social media",
+                    text: "Request received",
                     submitted_by: "Maryanna M",
-                    submitted_on: "Feb. 12, 2019",
-                    color: '#0bbd87',
-                },
-                {
-                    text: "Images on website suggest international work",
-                    submitted_by: "Maryanna M",
-                    submitted_on: "Feb. 12, 2019"
-                },
-                {
-                    text: "All submitted info from form checks out!",
-                    submitted_by: "Joe Shmoe",
-                    submitted_on: "Feb. 16, 2019"
-                },
-                {
-                    text: "Approved for phone discussion",
-                    submitted_by: "Maryanna M",
-                    submitted_on: "Feb. 12, 2019"
-                },
-                {
-                    text: "Sandy explained organiation will be opening a tech lab for children in AZ. Desktops will be used to help tech basic computer literacy to children",
-                    submitted_by: "Maryanna M",
-                    submitted_on: "April. 9, 2019"
-                },
-                {
-                    text: "Scheduled Pcikup",
-                    submitted_by: "Maryanna M",
-                    submitted_on: "April. 10, 2019"
-                },
-                {
-                    text: "Scheduled Pcikup",
-                    submitted_by: "Maryanna M",
-                    submitted_on: "April. 10, 2019"
-                },
-                {
-                    text: "Scheduled Pcikup",
-                    submitted_by: "Maryanna M",
-                    submitted_on: "April. 10, 2019"
-                },
-                {
-                    text: "Scheduled Pcikup",
-                    submitted_by: "Maryanna M",
-                    submitted_on: "April. 10, 2019"
-                }
+                    submitted_on: "July 29, 2019"
+                }],
+                todos: [{
+                        message: 'Verify all information submitted by organization',
+                        done: false,
+                    },
+                    {
+                        message: 'Check that organization is active via ACC',
+                        done: false,
+                    },
+                    {
+                        message: 'Visit social media pages of organization',
+                        done: false,
+                    }
                 ],
             },
-            taskData: [{
-                    message: 'Sign contract for "What are conference organizers afraid of?"',
-                    done: true,
-                },
-                {
-                    message: 'Lines From Great Russian Literature? Or E-mails From My Boss?',
-                    done: false,
-                },
-                {
-                    message: 'Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit',
-                    done: true,
-                }
-            ],
             requestStatuses: [{
                     value: "On Hold",
                     label: "On Hold",
@@ -434,19 +474,161 @@ export default {
                     value: "Approve",
                     lable: "Approve"
                 }
-            ]
-        }
+            ],
+            currentRow: null
+        };
     },
+    created() {
+        //make sure to check for what the current status is and set the color accordingly
+    },
+    computed: {
+        
+    },
+    // watch: {
+    //     techRequest: function(oldV, newV) {
+    //         if(status){
+    //             console.log();
+    //         }
+    //     },
+    //     deep: true
+    // },
     methods: {
-        selctionChange(val) {
-            console.log('-----handleCurrent----');
-            console.log(val);
-            console.log('-----handleCurrent----');
+        addNote(text) {
+            //add a way to remove notes
+            if(text.length > 1){
+                let t = text;
+                let by = "Anna A";               //change to logged in user's name
+                let on = "July 30, 2019";        //change to today's date using monment
+
+                this.techRequest.notes.push({
+                    text: t,
+                    submitted_by: by,
+                    submitted_on: on
+                });
+                this.$message({
+                    message: 'Note added successfully',
+                    type: 'success'
+                });
+                
+                //USE THIS FOR SUBMITTING NOTE TO DB TO SAVE IT
+                // .then(() => {
+                //     //clear input box
+                //     this.input.note = "";
+                //     this.$message({
+                //     message: 'Note added Successfully',
+                //     type: 'success'
+                //     });
+                // }).catch(() => {
+                //     this.$message({
+                //     message: "Counldn't add note. Please try again.",
+                //     type: 'danger'
+                //     });
+                // });
+            }
+            this.input.note = "";
+        },
+        updateStatus(status) {
+            //make sure to add it to the DB to save the changes
+            let text = "Report's status changed to: '" + status + "'.";
+            let submitted_by = "Anna Agboola";                  //change to logged in user's name
+            let submitted_on = "July 30, 2019";                 //change to today's date using moment
+            let color = "";
+
+            console.log(status);
+
+            switch (status) {
+                
+                case "Approved":
+                    this.statusTagColor = "success";
+                    this.techRequest.status = "Approved";
+                    color = "#0bbd87";
+                    this.techRequest.notes.push({
+                        text: text,
+                        submitted_by: submitted_by,
+                        submitted_on: submitted_on,
+                        color: color
+                    });
+                    break;
+                
+                case "On Hold":
+                    this.statusTagColor = "warning";
+                    this.techRequest.status = "On Hold";
+                    color = "#ffa500";
+                    this.techRequest.notes.push({
+                        text: text,
+                        submitted_by: submitted_by,
+                        submitted_on: submitted_on,
+                        color: color
+                    });
+                    break;
+            
+                case "Denied":
+                    this.statusTagColor = "danger";
+                    this.techRequest.status = "Denied";
+                    color = "#ff0000";
+                    this.techRequest.notes.push({
+                        text: text,
+                        submitted_by: submitted_by,
+                        submitted_on: submitted_on,
+                        color: color
+                    });
+                    break;
+                default:
+                    break;
+            }
+        },
+        confirmStatusUpdate(status) {
+            let message = "Are you sure you want to update this request's status to: ''" + status + "'? You cannot undo this action."
+            let approveMessage = "Successfully change this request's status to: ''" + status + "'.";
+            let errorMessage = "Status was NOT updated."
+
+            this.$confirm(message, 'Updating Status', {
+                confirmButtonText: 'Submit',
+                cancelButtonText: 'Cancel',
+            }).then(() => {
+                this.updateStatus(status);
+                this.$message({
+                    message: approveMessage,
+                    type: 'success'
+                });
+            }).catch(() => {
+                this.$message({
+                    message: errorMessage,
+                    type: 'danger'
+                });
+                
+
+            });
+            
+        },
+        handleCurrentChange(val) {
+            this.currentRow = val;
+        },
+        setCurrentRow(row) {
+            this.$refs.todoTable.setCurrentRow(row);
+            console.log('-----currentTodo----');
+            console.log(row);
+            console.log('-----currentTodo----');
         },
         addTodo(val) {
-            console.log('-----todo----');
-            console.log(val);
-            console.log('-----todo----');
+            if(val.length > 5)
+            this.techRequest.todos.push({
+                message: val,
+                done: false
+            });
+        },
+        removeTodo(message) {
+            console.log(message);
+            // let count = 0;
+            // let todos = this.techRequest.todos;
+
+            // todos.forEach(todo => {
+            //     count ++;
+            //     if(todo.message === message){
+            //         todos.slice(0, count).concat(todos.slice(count + 1, todos.length));
+            //     }
+            // });
+            // this.techRequest.todos = todos;
         }
     },
 }

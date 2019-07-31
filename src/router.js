@@ -93,7 +93,7 @@ const router = new Router({
                             children: [{
                                     path: '',
                                     alias: '/organizations/browse',
-                                    name: 'BrowseOrganizations',
+                                    name: 'Browse Organizations',
                                     component: () =>
                                         import ('./pages/Organizations/Organization/Browse.vue'),
                                     meta: {
@@ -104,7 +104,7 @@ const router = new Router({
                                 },
                                 {
                                     path: 'view/:organizationId',
-                                    name: 'ViewOrganization',
+                                    name: 'View Organization',
                                     component: () =>
                                         import ('./pages/Organizations/Organization/View.vue'),
                                     meta: {
@@ -116,7 +116,7 @@ const router = new Router({
                                 {
                                     path: 'add',
                                     alias: '/organizations/add',
-                                    name: 'AddOrganization',
+                                    name: 'Add Organization',
                                     component: () =>
                                         import ('./pages/Organizations/Organization/Add.vue'),
                                     meta: {
@@ -128,7 +128,7 @@ const router = new Router({
                                 {
                                     path: 'update/:organizationId',
                                     alias: '/organizations/update',
-                                    name: 'UpdateOrganizations',
+                                    name: 'Update Organizations',
                                     component: () =>
                                         import ('./pages/Organizations/Organization/Browse.vue'),
                                     meta: {
@@ -154,7 +154,7 @@ const router = new Router({
                     children: [{
                             path: '',
                             alias: '/tech-requests/dashboard',
-                            name: 'TechRequestsDashboard',
+                            name: 'Tech Requests Dashboard',
                             component: () =>
                                 import ('./pages/TechRequests/Dashboard.vue'),
                             meta: {
@@ -170,7 +170,7 @@ const router = new Router({
                             children: [{
                                     path: '',
                                     alias: '/tech-requests/browse',
-                                    name: 'BrowseTechRequests',
+                                    name: 'Browse Equiptment Requests',
                                     component: () =>
                                         import ('./pages/TechRequests/TechRequest/Browse.vue'),
                                     meta: {
@@ -180,9 +180,9 @@ const router = new Router({
                                     }
                                 },
                                 {
-                                    path: 'view',
+                                    path: 'view/:techRequestId',
                                     alias: '/tech-requests/view',
-                                    name: 'ViewTechRequest',
+                                    name: 'View Equiptment Request',
                                     component: () =>
                                         import ('./pages/TechRequests/TechRequest/View.vue'),
                                     meta: {
@@ -194,7 +194,7 @@ const router = new Router({
                                 {
                                     path: 'add',
                                     alias: '/tech-requests/add',
-                                    name: 'AddTechRequest',
+                                    name: 'Add Equiptment Request',
                                     component: () =>
                                         import ('./pages/TechRequests/TechRequest/Add.vue'),
                                     meta: {
@@ -206,7 +206,7 @@ const router = new Router({
                                 {
                                     path: 'update/:requestId',
                                     alias: '/tech-requests/update',
-                                    name: 'UpdateTechRequest',
+                                    name: 'Update Equiptment Request',
                                     component: () =>
                                         import ('./pages/TechRequests/TechRequest/Browse.vue'),
                                     meta: {
@@ -234,7 +234,7 @@ const router = new Router({
         {
             path: '/login',
             component: () =>
-                import ('./views/Auth/AuthLayout.vue'),
+                import ('./layouts/Auth/AuthLayout.vue'),
             children: [{
                 path: '',
                 name: 'Login',
@@ -245,7 +245,7 @@ const router = new Router({
         {
             path: '/register',
             component: () =>
-                import ('./views/Auth/AuthLayout.vue'),
+                import ('./layouts/Auth/AuthLayout.vue'),
             children: [{
                 path: '',
                 name: 'Register',

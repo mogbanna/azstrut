@@ -20,7 +20,9 @@ export const techRequest = {
         deleteTechRequestLoadStatus: 0,
         deleteTechRequestResponse: {},
         completeTechRequestLoadStatus: 0,
-        completeTechRequestResponse: {}
+        completeTechRequestResponse: {},
+        updateTechRequestStatusLoadStatus: 0,
+        updateTechRequestStatusResponse: {},
     },
     actions: {
         loadTechRequests: function({ commit }, data) {
@@ -76,6 +78,7 @@ export const techRequest = {
                 data.num_laptops,
                 data.status,
                 data.notes,
+                data.views,
                 data.created_by,
                 data.created_at,
                 data.updated_at,
@@ -99,6 +102,7 @@ export const techRequest = {
                 data.num_laptops,
                 data.status,
                 data.notes,
+                data.views,
                 data.created_by,
                 data.created_at,
                 data.updated_at,
@@ -127,6 +131,20 @@ export const techRequest = {
             }).catch(function(response) {
                 commit('setCompleteTechRequestLoadStatus', 3);
                 commit('setCompleteTechRequestResponse', response);
+            });
+        },
+        updateTechRequestStatus: function({ commit }, data) {
+            commit('setUpdateTechRequestStatusLoadStatus', 1);
+
+            TechRequestAPI.updateTechRequestStatus(
+                data.id,
+                data.status
+            ).then(function(response) {
+                commit('setUpdateTechRequestStatusLoadStatus', 2);
+                commit('setUpdateTechRequestStatusResponse', response);
+            }).catch(function(response) {
+                commit('setUpdateTechRequestStatusLoadStatus', 3);
+                commit('setUpdateTechRequestStatusResponse', response);
             });
         },
         deleteTechRequest: function({ commit }, data) {
@@ -179,6 +197,12 @@ export const techRequest = {
         },
         setCompleteTechRequestResponse(state, response) {
             state.completeTechRequestResponse = response;
+        },
+        setUpdateTechRequestStatusLoadStatus(state, status) {
+            state.updateTechRequestStatusLoadStatus = status;
+        },
+        setUpdateTechRequestStatusResponse(state, response) {
+            state.updateTechRequestStatusResponse = response;
         }
     },
     getters: {
@@ -217,6 +241,12 @@ export const techRequest = {
         },
         getCompleteTechRequestResponse(state) {
             return state.completeTechRequestResponse;
+        },
+        getUpdateTechRequestStatusLoadStatus(state) {
+            return state.updateTechRequestStatusLoadStatus;
+        },
+        getUpdateTechRequestStatusResponse(state) {
+            return state.updateTechRequestStatusResponse;
         }
     }
 };
