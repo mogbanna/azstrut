@@ -19,6 +19,23 @@ export default {
 
     },
 
+    // getOrganizationRequests: function(
+    //     ein,
+    //     limit = 1000000,
+    //     descending = false,
+    //     skip = 0,
+    //     include_docs = true
+    // ) {
+    //     return CONFIG.LOCAL_DB.query('tech-requests', {
+    //         limit,
+    //         descending,
+    //         skip,
+    //         include_docs,
+    //         filter: function(doc) {
+    //             return doc.organization.ein === ein; // only get requests matching the given ein
+    //         },
+    //     });
+    // },
     search: function(
         query,
         fields,

@@ -17,7 +17,7 @@
                     <card class="card-tasks" no-footer-line>
                         <template slot="header">
                             <h6 class="title">Todo List</h6>
-                            <p class="category mt-1">Keep a list of what needs to be done next with this Equiptment Request</p>
+                            <p class="category mt-1 mb-0">Keep a list of what needs to be done next with this Equiptment Request</p>
                         </template>
 
                         <div class="table-full-width table-responsive pt-0">
@@ -294,11 +294,20 @@
                         </div>
                         <div class="card-body py-0">
                             <div class="row">
+                                <!-- <el-button 
+                                type="success"
+                                style="width: 100%" 
+                                @click.native="confirmStatusUpdate('Approved')">
+                                Approve
+                                </el-button> -->
+
+
                                 <n-button 
                                     type="success" 
                                     block 
-                                    round
+                                    
                                     @click.native="confirmStatusUpdate('Approved')">
+                                    <i class="now-ui-icons ui-2_like"></i>
                                     Approve
                                 </n-button>
                             </div>
@@ -306,20 +315,34 @@
                                     <n-button 
                                         class="col" 
                                         type="warning" 
-                                        block 
-                                        round
+                                        block                                        
                                         @click.native="confirmStatusUpdate('On Hold')">
+                                        <!-- <i class="now-ui-icons media-1_button-pause"></i> -->
                                         Hold
                                     </n-button>
+                                    <!-- <el-button 
+                                        class="col"
+                                        type="warning" 
+                                        palin
+                                        @click.native="confirmStatusUpdate('On Hold')">
+                                        Hold
+                                    </el-button> -->
                                     <n-button 
                                         class="col" 
                                         type="danger" 
                                         simple 
                                         block 
-                                        round
                                         @click.native="confirmStatusUpdate('Denied')">
+                                        <!-- <i class="now-ui-icons ui-1_simple-remove"></i> -->
                                         Deny
                                     </n-button>
+                                    <!-- <el-button 
+                                        class="col"
+                                        type="danger" 
+                                        plain
+                                        @click.native="confirmStatusUpdate('Denied')">
+                                        Deny
+                                    </el-button> -->
                             </div>
                         </div>
                     </card>
@@ -369,6 +392,7 @@
     </div>
 </template>
 <script>
+import moment from 'moment';
 import {
     StatsCard,
     Table as NTable,
@@ -388,6 +412,7 @@ import {
     Checkbox,
     Button
 } from 'element-ui';
+import swal from 'sweetalert2';
 
 export default {
     components: {
@@ -413,55 +438,19 @@ export default {
                 note: "",
                 todo: ""
             },
-            techRequest: {
-                created_at: "July 29, 2019",
-                num_laptops: 40,
-                num_desktops: 20,
-                organization: {
-                    name: "IBEX Youth Academy",
-                    legal_name: "No legal name",
-                    website: "www.ibex.org",
-                    social_media: "facebook",
-                    organization_type: "Other NonProfit",
-                    ein: "2327DASf",
-                    acc_file: {
-                        number: "45673hsadf",
-                        listing_link: "www.listinglink.com/IBEX",
-                    },
-                    primary_contact: {
-                        full_name: "Anna Agboola",
-                        role: "Board Member",
-                        email: "aa@ibex.com",
-                        phone: "708-773-8676",
-                    },
-                    secondary_contact: {
-                        full_name: "Erika Edmounds",
-                        role: "Non Board Member",
-                        email: "ee@ibex.com",
-                        phone: "773-657-8676",
-                    },
-                    notes: "We have a new tech department opening up and we would be using the laptops for the kids we already have in our organization"
+            defaultTodos: [{
+                    message: 'Verify all information submitted by organization',
+                    done: false,
                 },
-                status: "New",
-                notes: [{
-                    text: "Request received",
-                    submitted_by: "Maryanna M",
-                    submitted_on: "July 29, 2019"
-                }],
-                todos: [{
-                        message: 'Verify all information submitted by organization',
-                        done: false,
-                    },
-                    {
-                        message: 'Check that organization is active via ACC',
-                        done: false,
-                    },
-                    {
-                        message: 'Visit social media pages of organization',
-                        done: false,
-                    }
-                ],
-            },
+                {
+                    message: 'Check that organization is active via ACC',
+                    done: false,
+                },
+                {
+                    message: 'Visit social media pages of organization',
+                    done: false,
+                }
+            ],
             requestStatuses: [{
                     value: "On Hold",
                     label: "On Hold",
@@ -480,18 +469,66 @@ export default {
     },
     created() {
         //make sure to check for what the current status is and set the color accordingly
+        this.$store.dispatch('loadTechRequest', {
+            id: this.$route.params.techRequestId
+        });
     },
     computed: {
-        
+        techRequest() {
+            return this.$store.getters.getTechRequest;
+        },
+        techRequestLoadStatus() {
+            return this.$store.getters.getTechRequestLoadStatus;
+        },
+        user() {
+            return this.$store.getters.getUser;
+        },
+        userLoadStatus() {
+            return this.$store.getters.getUserLoadStatus;
+        }
+        // userSession() {
+        //     return this.$store.getters.getUserSession;
+        // },
+        // userSessionLoadStatus() {
+        //     return this.$store.getters.getUserSessionLoadStatus;
+        // }
     },
-    // watch: {
+    watch: {
+        techRequestLoadStatus: function(val) {
+            if(val == 2) {
+                console.log(this.techRequest);
+                console.log(this.user);
+                //check if this is the first time opening the techRequest
+                if(this.techRequest.views == 0) {
+                    
+                    //set the default todo list
+                    this.techRequest.todos = this.defaultTodos;
+
+                    //add the first note
+                    this.techRequest.notes.push({
+                        text: "Request received",
+                        submitted_by: this.user.first_name + " " + this.user.last_name.charAt(0) + ".",
+                        submitted_on: moment().format("LL")
+                    });
+
+                    // increment the views for everytime the request is loaded up. i.e it's been seen
+                    this.techRequest.views ++;
+
+                    //update the request in the DB
+                }
+                
+            }
+        }
+    //     todoTable(val){
+    //         console.log(val);
+    //     }
     //     techRequest: function(oldV, newV) {
     //         if(status){
     //             console.log();
     //         }
     //     },
     //     deep: true
-    // },
+    },
     methods: {
         addNote(text) {
             //add a way to remove notes
@@ -617,18 +654,28 @@ export default {
                 done: false
             });
         },
-        removeTodo(message) {
-            console.log(message);
-            // let count = 0;
-            // let todos = this.techRequest.todos;
-
-            // todos.forEach(todo => {
-            //     count ++;
-            //     if(todo.message === message){
-            //         todos.slice(0, count).concat(todos.slice(count + 1, todos.length));
-            //     }
-            // });
-            // this.techRequest.todos = todos;
+        removeTodo(index) {
+             this.$confirm('Are you sure you want to delete this todo?', 'Danger', {
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'Cancel',
+                type: 'danger'
+                }).then(() => {
+                    //remove todo
+                    if (index >= 0) {
+                        this.techRequest.todos.splice(index, 1);
+                    }
+                    this.$message({
+                        type: 'success',
+                        message: 'Successfully deleted todo'
+                });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: 'The todo was NOT deleted'
+                });          
+                });
+            
+            
         }
     },
 }

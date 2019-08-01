@@ -41,12 +41,12 @@ export default {
         organization,
         num_desktops,
         num_laptops,
-        status,
-        notes,
+        status = "new",
+        todos = [],
+        notes = [],
+        views = 0,
         created_by,
         created_at,
-        updated_at,
-        updated_by,
         completed_at,
         type = 'tech_request'
     ) {
@@ -56,11 +56,11 @@ export default {
             num_desktops,
             num_laptops,
             status,
+            todos,
             notes,
+            views,
             created_by,
             created_at,
-            updated_at,
-            updated_by,
             completed_at
         });
     },
@@ -78,11 +78,11 @@ export default {
         num_desktops,
         num_laptops,
         status,
+        todos,
         notes,
+        views,
         created_by,
         created_at,
-        updated_at,
-        updated_by,
         completed_at,
         type
     ) {
@@ -94,11 +94,11 @@ export default {
             num_desktops,
             num_laptops,
             status,
+            todos,
             notes,
+            views,
             created_by,
             created_at,
-            updated_at,
-            updated_by,
             completed_at
         });
     },

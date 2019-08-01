@@ -187,6 +187,7 @@
                                 <fg-input
                                     type="number"
                                     min="0"
+                                    max="500"
                                     placeholder="0"
                                     v-model="form.num_desktops">
                                 </fg-input>
@@ -196,6 +197,7 @@
                                 <fg-input
                                     type="number"
                                     min="0"
+                                    max="500"
                                     placeholder="0"
                                     v-model="form.num_laptops">
                                 </fg-input>
@@ -305,8 +307,6 @@ export default {
                 notes: '',
                 created_by: {},
                 created_at: [],
-                updated_by: {},
-                updated_at: [],
                 completed_at: []
             },
             organizationSearch: [],

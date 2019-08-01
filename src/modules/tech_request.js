@@ -4,7 +4,6 @@
 |-------------------------------------------------------------------------------
 | The Vuex data techRequest for the techRequest
 */
-
 import TechRequestAPI from '../apis/tech_request';
 
 export const techRequest = {
@@ -22,7 +21,7 @@ export const techRequest = {
         completeTechRequestLoadStatus: 0,
         completeTechRequestResponse: {},
         updateTechRequestStatusLoadStatus: 0,
-        updateTechRequestStatusResponse: {},
+        updateTechRequestStatusResponse: {}
     },
     actions: {
         loadTechRequests: function({ commit }, data) {
@@ -77,12 +76,11 @@ export const techRequest = {
                 data.num_desktops,
                 data.num_laptops,
                 data.status,
+                dat.todos,
                 data.notes,
                 data.views,
                 data.created_by,
                 data.created_at,
-                data.updated_at,
-                data.updated_by,
                 data.completed_at
             ).then(function(response) {
                 commit('setAddTechRequestLoadStatus', 2);
@@ -101,12 +99,11 @@ export const techRequest = {
                 data.num_desktops,
                 data.num_laptops,
                 data.status,
+                data.todos,
                 data.notes,
                 data.views,
                 data.created_by,
                 data.created_at,
-                data.updated_at,
-                data.updated_by,
                 data.completed_at,
                 data.type
             ).then(function(response) {
