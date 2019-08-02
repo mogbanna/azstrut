@@ -392,6 +392,7 @@
     </div>
 </template>
 <script>
+import { CONFIG } from '@/config.js'
 import moment from 'moment';
 import {
     StatsCard,
@@ -485,40 +486,68 @@ export default {
         },
         userLoadStatus() {
             return this.$store.getters.getUserLoadStatus;
-        }
+        },
         // userSession() {
         //     return this.$store.getters.getUserSession;
         // },
         // userSessionLoadStatus() {
         //     return this.$store.getters.getUserSessionLoadStatus;
         // }
+        updateTechRequestLoadStatus() {
+            return this.$store.getters.getUpdateTechRequestLoadStatus;
+        },
+        updateTechRequestResponse() {
+            return this.$store.getters.getUpdateTechRequestResponse;
+        }
     },
     watch: {
         techRequestLoadStatus: function(val) {
             if(val == 2) {
-                console.log(this.techRequest);
-                console.log(this.user);
+                // console.log(this.techRequest);
+                // console.log(this.user);
                 //check if this is the first time opening the techRequest
-                if(this.techRequest.views == 0) {
+                if(this.techRequest.status === "new") {
                     
+                    //update the statu
+                    this.techRequest.status = 'in review';
+
                     //set the default todo list
                     this.techRequest.todos = this.defaultTodos;
 
                     //add the first note
                     this.techRequest.notes.push({
                         text: "Request received",
-                        submitted_by: this.user.first_name + " " + this.user.last_name.charAt(0) + ".",
+                        submitted_by: this.user.first_name + " " + this.user.last_name.charAt(0).toUpperCase() + ".",
                         submitted_on: moment().format("LL")
                     });
-
-                    // increment the views for everytime the request is loaded up. i.e it's been seen
-                    this.techRequest.views ++;
 
                     //update the request in the DB
                 }
                 
             }
-        }
+        },
+        techRequest: {
+            handler(val) {
+                console.log(val);
+                console.log('_____________');
+                // console.log(newV);
+            },
+            deep: true
+        },
+        updateTechRequestLoadStatus: function(val) {
+            if(val == 2) {
+                console.log('Updated request successfully');
+
+            //reload the tech request so we can have the right _rev number for next update
+            this.$store.dispatch('loadTechRequest', {
+                id: this.$route.params.techRequestId
+            });
+                
+            }
+        },
+        // updateTechRequestResponse: function(val) {
+        //     console.log(val);
+        // },
     //     todoTable(val){
     //         console.log(val);
     //     }
@@ -570,8 +599,6 @@ export default {
             let submitted_by = "Anna Agboola";                  //change to logged in user's name
             let submitted_on = "July 30, 2019";                 //change to today's date using moment
             let color = "";
-
-            console.log(status);
 
             switch (status) {
                 
@@ -643,16 +670,20 @@ export default {
         },
         setCurrentRow(row) {
             this.$refs.todoTable.setCurrentRow(row);
-            console.log('-----currentTodo----');
-            console.log(row);
-            console.log('-----currentTodo----');
         },
         addTodo(val) {
+            //todo must be at least 5 characters long-- to help prevent accidental things being added
             if(val.length > 5)
+
             this.techRequest.todos.push({
                 message: val,
                 done: false
             });
+
+            //update the DB
+            this.$store.dispatch('updateTechRequest', this.techRequest);
+                this.input.todo = "";
+
         },
         removeTodo(index) {
              this.$confirm('Are you sure you want to delete this todo?', 'Danger', {
@@ -662,8 +693,13 @@ export default {
                 }).then(() => {
                     //remove todo
                     if (index >= 0) {
+                        
                         this.techRequest.todos.splice(index, 1);
+                        
+                        //update the DB
+                        this.$store.dispatch('updateTechRequest', this.techRequest);
                     }
+
                     this.$message({
                         type: 'success',
                         message: 'Successfully deleted todo'

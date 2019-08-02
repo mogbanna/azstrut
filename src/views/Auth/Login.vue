@@ -5,7 +5,7 @@
 
         <div slot="header">
           <div class="logo-container">
-            <img src="img/now-logo.png" alt="">
+            <img src="@/assets/logo.png" alt="">
           </div>
         </div>
 

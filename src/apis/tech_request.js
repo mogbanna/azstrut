@@ -44,7 +44,6 @@ export default {
         status = "new",
         todos = [],
         notes = [],
-        views = 0,
         created_by,
         created_at,
         completed_at,
@@ -58,7 +57,6 @@ export default {
             status,
             todos,
             notes,
-            views,
             created_by,
             created_at,
             completed_at
@@ -80,7 +78,6 @@ export default {
         status,
         todos,
         notes,
-        views,
         created_by,
         created_at,
         completed_at,
@@ -96,7 +93,6 @@ export default {
             status,
             todos,
             notes,
-            views,
             created_by,
             created_at,
             completed_at

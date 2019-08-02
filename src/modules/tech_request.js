@@ -78,7 +78,6 @@ export const techRequest = {
                 data.status,
                 dat.todos,
                 data.notes,
-                data.views,
                 data.created_by,
                 data.created_at,
                 data.completed_at
@@ -101,7 +100,6 @@ export const techRequest = {
                 data.status,
                 data.todos,
                 data.notes,
-                data.views,
                 data.created_by,
                 data.created_at,
                 data.completed_at,

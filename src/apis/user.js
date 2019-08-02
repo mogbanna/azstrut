@@ -39,11 +39,11 @@ export default {
     },
 
     store: function(username, password, opts) {
-        /*return CONFIG.REMOTE_DB.signUp(username, password, {
-            metadata : opts.metadata,
-            roles: opts.roles
-        });*/
-        //console.log(opts);
+        // return CONFIG.REMOTE_DB.signUp(username, password, {
+        //     metadata: opts.metadata,
+        //     roles: opts.roles
+        // });
+        // console.log(opts);
         var salt = bcrypt.genSaltSync(10);
 
         return CONFIG.LOCAL_USER_DB.get("org.couchdb.user:" + username).then(function(doc) {
