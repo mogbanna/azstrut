@@ -14,7 +14,7 @@
 
                 <!-- BEGIN TODO ROW -->
                 <div class="row" id="toDoRow">
-                    <card class="card-tasks" no-footer-line>
+                    <card class="card-tasks" no-footer-line v-if="organization_verified">
                         <template slot="header">
                             <h6 class="title">Todo List</h6>
                             <p class="category mt-1 mb-0">Keep a list of what needs to be done next with this Equiptment Request</p>
@@ -51,28 +51,6 @@
                                             </template>
                                     </el-table-column>
                             </el-table>
-                            
-                            <!-- <n-table 
-                                ref="todoTable"
-                                :data="techRequest.todos"
-                                highlight-current-row
-                                @current-change="handleCurrentChange"
-                                >
-                                    <template slot-scope="{row}">
-                                        <td>
-                                        <checkbox v-model="row.done"></checkbox>
-                                        </td>
-                                        <td class="text-left">{{row.message}}</td>
-                                        <td class="td-actions text-right">
-                                        <button type="button" rel="tooltip" title=""
-                                                class="btn btn-danger btn-round btn-icon btn-icon-mini btn-neutral"
-                                                data-original-title="Remove"
-                                                @click="removeTodo(row)">
-                                            <i class="now-ui-icons ui-1_simple-remove"></i>
-                                        </button>
-                                        </td>
-                                    </template>
-                            </n-table> -->
                         </div>
 
                         <template slot="footer">
@@ -109,7 +87,13 @@
                                 <h5 class="title">Equiptment Request</h5>
                             </div>
                             <div class="col-3 pt-2">
-                                <el-tag id="statusTag" :type="statusTagColor">{{ techRequest.status }}</el-tag>
+                                <el-tag id="statusTag" :type="techRequest.status === 'new' ? 'brand color'
+                                                        : techRequest.status === 'in review' ? 'info'
+                                                        : techRequest.status === 'approved' ? 'success'
+                                                        : techRequest.status === 'hold' ? 'warning'
+                                                        : 'danger'">
+                                    {{ techRequest.status }}
+                                </el-tag>
                             </div>
                         </div>
                         <div class="card-body">
@@ -287,26 +271,38 @@
             <!-- BEGIN RIGHT COLUMN -->
             <div class="col-3 ml-1">
 
-                <div class="row">
+                <!-- BEGIN STATUS UPDATE / VERIFY ORG ROW -->
+                <div class="row"  v-loading="organizationsLoadStatus == 1">
                     <card>
-                        <div slot="header">
-                            <h6 class="title">Update Status</h6>
+                        <div slot="header" class="text-center">
+                            <h5 class="title text-danger" v-if="!organization_verified">Please Verify Organization !</h5>
+                            <h6 class="title" v-else>Update Status</h6>
                         </div>
-                        <div class="card-body py-0">
+                        <div class="cardbody py-0" v-if="!organization_verified">
                             <div class="row">
-                                <!-- <el-button 
-                                type="success"
-                                style="width: 100%" 
-                                @click.native="confirmStatusUpdate('Approved')">
-                                Approve
-                                </el-button> -->
-
-
+                                <el-table
+                                    ref="orgTable"
+                                    stripe
+                                    :data="searchResult"
+                                    empty-text="No Matches Yet"
+                                    style="width: 100%"
+                                    highlight-current-row
+                                    @current-change="handleCurrentChange"
+                                    >
+                                <el-table-column
+                                    label="Saved Organizations"
+                                    prop="name">
+                                </el-table-column>
+                                </el-table>
+                            </div>
+                        </div>
+                        <div class="card-body py-0" v-else>
+                            <div class="row">
                                 <n-button 
                                     type="success" 
                                     block 
                                     
-                                    @click.native="confirmStatusUpdate('Approved')">
+                                    @click.native="confirmStatusUpdate('approved')">
                                     <i class="now-ui-icons ui-2_like"></i>
                                     Approve
                                 </n-button>
@@ -316,39 +312,26 @@
                                         class="col" 
                                         type="warning" 
                                         block                                        
-                                        @click.native="confirmStatusUpdate('On Hold')">
-                                        <!-- <i class="now-ui-icons media-1_button-pause"></i> -->
+                                        @click.native="confirmStatusUpdate('hold')">
                                         Hold
                                     </n-button>
-                                    <!-- <el-button 
-                                        class="col"
-                                        type="warning" 
-                                        palin
-                                        @click.native="confirmStatusUpdate('On Hold')">
-                                        Hold
-                                    </el-button> -->
                                     <n-button 
                                         class="col" 
                                         type="danger" 
                                         simple 
                                         block 
-                                        @click.native="confirmStatusUpdate('Denied')">
-                                        <!-- <i class="now-ui-icons ui-1_simple-remove"></i> -->
+                                        @click.native="confirmStatusUpdate('denied')">
                                         Deny
                                     </n-button>
-                                    <!-- <el-button 
-                                        class="col"
-                                        type="danger" 
-                                        plain
-                                        @click.native="confirmStatusUpdate('Denied')">
-                                        Deny
-                                    </el-button> -->
                             </div>
                         </div>
                     </card>
                 </div>
+                <!-- END STATUS UPDATE / VERIFY ORGANIZATION ROW -->
+
+                <!-- BEGIN NOTES ROW -->
                 <div id="notesRow" class="row">
-                    <card>
+                    <card v-if="organization_verified">
                         <div slot="header">
                             <h6 class="title">Notes</h6>
                             <!-- allow user to submit the note by hitting enter -->
@@ -386,13 +369,16 @@
                         </el-container>
                     </card>
                 </div>
+                <!-- END NOTES ROW -->
             </div>
 
         </div>
     </div>
 </template>
 <script>
-import { CONFIG } from '@/config.js'
+import {
+    CONFIG
+} from '@/config.js'
 import moment from 'moment';
 import {
     StatsCard,
@@ -433,7 +419,7 @@ export default {
         [Button.name]: Button
     },
     data() {
-        return { 
+        return {
             statusTagColor: "",
             input: {
                 note: "",
@@ -465,13 +451,23 @@ export default {
                     lable: "Approve"
                 }
             ],
-            currentRow: null
+            currentRow: null,
+            organization_verified: false,
+            searchResult: []
         };
     },
+    mounted() {
+
+    },
     created() {
+
         //make sure to check for what the current status is and set the color accordingly
         this.$store.dispatch('loadTechRequest', {
             id: this.$route.params.techRequestId
+        });
+        //load user info
+        this.$store.dispatch('loadUser', {
+            username: this.$store.getters.getUserSession.userCtx.name
         });
     },
     computed: {
@@ -480,6 +476,12 @@ export default {
         },
         techRequestLoadStatus() {
             return this.$store.getters.getTechRequestLoadStatus;
+        },
+        organizations() {
+            return this.$store.getters.getOrganizations;
+        },
+        organizationsLoadStatus() {
+            return this.$store.getters.getOrganizationsLoadStatus;
         },
         user() {
             return this.$store.getters.getUser;
@@ -501,14 +503,21 @@ export default {
         }
     },
     watch: {
-        techRequestLoadStatus: function(val) {
-            if(val == 2) {
-                // console.log(this.techRequest);
-                // console.log(this.user);
+        techRequestLoadStatus: function (val) {
+            if (val == 2) {
+
                 //check if this is the first time opening the techRequest
-                if(this.techRequest.status === "new") {
-                    
-                    //update the statu
+                if (this.techRequest.status === "new") {
+
+                    //determine whether or not organization has been verified and added to the DB yet
+                    this.$store.dispatch('searchOrganizations', {
+                        query: this.techRequest.organization.name,
+                        fields: ['name'],
+                        limit: 50,
+                        skip: 0
+                    });
+
+                    //update the status
                     this.techRequest.status = 'in review';
 
                     //set the default todo list
@@ -522,49 +531,66 @@ export default {
                     });
 
                     //update the request in the DB
+                    this.$store.dispatch('updateTechRequest', this.techRequest);
                 }
-                
+                this.organization_verified = true;
+            }
+        },
+        organizationsLoadStatus: function (val) {
+            if (val == 2) {
+                let orgs = this.organizations;
+
+                /*if more than one organization returned, display table to user 
+                so they can choose which organization will be associated with this request */
+                if (orgs.total_rows > 1) {
+                    /*loop through each organization and provide the 
+                    name in the table for the user to select
+                    if user selects a name, we need to update the 
+                    information displayed on the form with the
+                    in the database */
+                    orgs.rows.forEach(org => {
+                        let temp = {};
+                        temp.id = org.doc._id;
+                        temp.name = org.doc.name;
+                        this.searchResult.push(temp);
+                    });
+                } else if (orgs.total_rows == 1) {
+                    //only one match for organization in DB, so user can continue editing tech request
+                    this.organization_verified = true;
+                } else {
+                    //there are no organizations matching this request, so use needs to go add the organization
+                    // this.$router.push({
+                    //     path: ''
+                    // });
+                }
             }
         },
         techRequest: {
             handler(val) {
-                console.log(val);
-                console.log('_____________');
+                // console.log(val);
+                // console.log('_____________');
                 // console.log(newV);
             },
             deep: true
         },
-        updateTechRequestLoadStatus: function(val) {
-            if(val == 2) {
+        updateTechRequestLoadStatus: function (val) {
+            if (val == 2) {
                 console.log('Updated request successfully');
 
-            //reload the tech request so we can have the right _rev number for next update
-            this.$store.dispatch('loadTechRequest', {
-                id: this.$route.params.techRequestId
-            });
-                
+                //reload the tech request so we can have the right _rev number for next update
+                this.$store.dispatch('loadTechRequest', {
+                    id: this.$route.params.techRequestId
+                });
+
             }
-        },
-        // updateTechRequestResponse: function(val) {
-        //     console.log(val);
-        // },
-    //     todoTable(val){
-    //         console.log(val);
-    //     }
-    //     techRequest: function(oldV, newV) {
-    //         if(status){
-    //             console.log();
-    //         }
-    //     },
-    //     deep: true
+        }
     },
     methods: {
         addNote(text) {
-            //add a way to remove notes
-            if(text.length > 1){
+            if (text.length > 1) {
                 let t = text;
-                let by = "Anna A";               //change to logged in user's name
-                let on = "July 30, 2019";        //change to today's date using monment
+                let by = this.user.first_name + " " + this.user.last_name.charAt(0) + "."; //change to logged in user's name
+                let on = moment().format('LL'); //change to today's date using monment
 
                 this.techRequest.notes.push({
                     text: t,
@@ -575,37 +601,23 @@ export default {
                     message: 'Note added successfully',
                     type: 'success'
                 });
-                
-                //USE THIS FOR SUBMITTING NOTE TO DB TO SAVE IT
-                // .then(() => {
-                //     //clear input box
-                //     this.input.note = "";
-                //     this.$message({
-                //     message: 'Note added Successfully',
-                //     type: 'success'
-                //     });
-                // }).catch(() => {
-                //     this.$message({
-                //     message: "Counldn't add note. Please try again.",
-                //     type: 'danger'
-                //     });
-                // });
+                //update the DB
+                this.$store.dispatch('updateTechRequest', this.techRequest);
             }
             this.input.note = "";
         },
         updateStatus(status) {
-            //make sure to add it to the DB to save the changes
-            let text = "Report's status changed to: '" + status + "'.";
-            let submitted_by = "Anna Agboola";                  //change to logged in user's name
-            let submitted_on = "July 30, 2019";                 //change to today's date using moment
+
+            let text = "Report's status changed to '" + status + "'.";
+            let submitted_by = this.user.first_name + " " + this.user.last_name.charAt(0) + ".";
+            let submitted_on = moment().format('LL');
             let color = "";
 
             switch (status) {
-                
-                case "Approved":
-                    this.statusTagColor = "success";
-                    this.techRequest.status = "Approved";
-                    color = "#0bbd87";
+
+                case "approved":
+                    this.techRequest.status = "approved";
+                    color = "#67C23A";
                     this.techRequest.notes.push({
                         text: text,
                         submitted_by: submitted_by,
@@ -613,11 +625,10 @@ export default {
                         color: color
                     });
                     break;
-                
-                case "On Hold":
-                    this.statusTagColor = "warning";
-                    this.techRequest.status = "On Hold";
-                    color = "#ffa500";
+
+                case "hold":
+                    this.techRequest.status = "hold";
+                    color = "#E6A23C";
                     this.techRequest.notes.push({
                         text: text,
                         submitted_by: submitted_by,
@@ -625,11 +636,10 @@ export default {
                         color: color
                     });
                     break;
-            
-                case "Denied":
-                    this.statusTagColor = "danger";
-                    this.techRequest.status = "Denied";
-                    color = "#ff0000";
+
+                case "denied":
+                    this.techRequest.status = "denied";
+                    color = "#F56C6C";
                     this.techRequest.notes.push({
                         text: text,
                         submitted_by: submitted_by,
@@ -640,6 +650,8 @@ export default {
                 default:
                     break;
             }
+            //update DB
+            this.$store.dispatch('updateTechRequest', this.techRequest);
         },
         confirmStatusUpdate(status) {
             let message = "Are you sure you want to update this request's status to: ''" + status + "'? You cannot undo this action."
@@ -660,10 +672,7 @@ export default {
                     message: errorMessage,
                     type: 'danger'
                 });
-                
-
             });
-            
         },
         handleCurrentChange(val) {
             this.currentRow = val;
@@ -673,45 +682,45 @@ export default {
         },
         addTodo(val) {
             //todo must be at least 5 characters long-- to help prevent accidental things being added
-            if(val.length > 5)
+            if (val.length > 5)
 
-            this.techRequest.todos.push({
-                message: val,
-                done: false
-            });
+                this.techRequest.todos.push({
+                    message: val,
+                    done: false
+                });
 
             //update the DB
             this.$store.dispatch('updateTechRequest', this.techRequest);
-                this.input.todo = "";
+
+            //clear input for to add another todo 
+            this.input.todo = "";
 
         },
         removeTodo(index) {
-             this.$confirm('Are you sure you want to delete this todo?', 'Danger', {
+            this.$confirm('Are you sure you want to delete this todo?', 'Danger', {
                 confirmButtonText: 'Yes',
                 cancelButtonText: 'Cancel',
                 type: 'danger'
-                }).then(() => {
-                    //remove todo
-                    if (index >= 0) {
-                        
-                        this.techRequest.todos.splice(index, 1);
-                        
-                        //update the DB
-                        this.$store.dispatch('updateTechRequest', this.techRequest);
-                    }
+            }).then(() => {
+                if (index >= 0) {
 
-                    this.$message({
-                        type: 'success',
-                        message: 'Successfully deleted todo'
+                    //remove todo
+                    this.techRequest.todos.splice(index, 1);
+
+                    //update the DB
+                    this.$store.dispatch('updateTechRequest', this.techRequest);
+                }
+
+                this.$message({
+                    type: 'success',
+                    message: 'Successfully deleted todo'
                 });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: 'The todo was NOT deleted'
-                });          
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: 'The todo was NOT deleted'
                 });
-            
-            
+            });
         }
     },
 }

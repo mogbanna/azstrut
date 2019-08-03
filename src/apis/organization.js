@@ -41,13 +41,18 @@ export default {
         fields,
         limit,
         skip,
+        mm = '75%',
         include_docs = true
     ) {
         return CONFIG.LOCAL_DB.search({
             query: query,
             fields: fields,
+            filter: function(doc) {
+                return doc.type === 'organization'; // only index organizations
+            },
             limit: limit,
             skip: skip,
+            mm: mm,
             include_docs: include_docs
         });
     },

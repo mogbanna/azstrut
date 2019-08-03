@@ -44,14 +44,18 @@
                                     prop="status"
                                     label="Status"
                                     min-width="150"
-                                    :filters="[{ text: 'New', value: 'New' }, { text: 'Under Review', value: 'Under Review' }, { text: 'Approved', value: 'Approved' }, { text: 'Hold', value: 'Hold' }, { text: 'Denied', value: 'Denied' }]"
+                                    :filters="[{ text: 'New', value: 'new' }, { text: 'Under Review', value: 'in review' }, { text: 'Approved', value: 'approved' }, { text: 'Hold', value: 'hold' }, { text: 'Denied', value: 'denied' }]"
                                     :filter-method="filterTag"
                                     filter-placement="bottom-end"
                                 >
                                     <template slot-scope="scope">
                                         <el-tag
                                         id="statusTag"
-                                        :type="scope.row.status === 'New' ? 'primary' : 'success'"
+                                        :type="scope.row.status === 'new' ? 'brand color'
+                                               : scope.row.status === 'in review' ? 'info'
+                                               : scope.row.status === 'approved' ? 'success'
+                                               : scope.row.status === 'hold' ? 'warning'
+                                               : 'danger'"
                                         disable-transitions>{{scope.row.status}}</el-tag>
                                     </template>
                             </el-table-column>
@@ -115,6 +119,7 @@ export default {
         techRequestsLoadStatus: function(val) {
             if(val == 2) {
 
+                console.log(this.techRequests);
 
                 this.techRequests.rows.forEach(tech => {
                     let temp = {};
