@@ -1,4 +1,5 @@
 # azstrut
+.config file not included. will be adding a sample file for anyone who wants to run this project on their local machine
 
 ## Project setup
 ```
