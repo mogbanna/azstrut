@@ -119,7 +119,6 @@ export default {
         techRequestsLoadStatus: function(val) {
             if(val == 2) {
 
-                console.log(this.techRequests);
 
                 this.techRequests.rows.forEach(tech => {
                     let temp = {};
@@ -128,7 +127,6 @@ export default {
                     temp.date = moment(tech.doc.created_at).format('LL');
                     temp.organization = tech.doc.organization.name;
                     temp.status = tech.doc.status;
-                    // temp.last_note = tech.doc.notes.rows[tech.doc.notes.size];
 
                     this.tableData.push(temp);
                 });

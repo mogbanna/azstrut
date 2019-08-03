@@ -136,6 +136,18 @@ const router = new Router({
                                         title: 'Update Organization',
                                         module: 'Organizations'
                                     }
+                                },
+                                {
+                                    path: 'fromTechRequestAdd/:techRequestId',
+                                    alias: '/organizations/fromTechRequestAdd',
+                                    name: 'From Tech Request Add Organization',
+                                    component: () =>
+                                        import ('./pages/Organizations/Organization/FromTechRequestAdd.vue'),
+                                    meta: {
+                                        parentTitle: 'Organizations',
+                                        title: 'From Tech Request Add Organization',
+                                        module: 'Organizations'
+                                    }
                                 }
                             ]
                         }

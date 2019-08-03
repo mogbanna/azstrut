@@ -556,9 +556,22 @@ export default {
                     });
                 } else if (orgs.total_rows == 1) {
                     //only one match for organization in DB, so user can continue editing tech request
+                    
+ //!!!!                   //add this techrequest id to the organization's info                          !!!!!!!!!!!!!!!!!!!!!
+
                     this.organization_verified = true;
                 } else {
-                    //there are no organizations matching this request, so use needs to go add the organization
+                    //notify the user to add the organization's info to DB
+                    this.$alert('Please add this organization to the records first.', 'New Organization Detected!', {
+                        confirmButtonText: "Let's go!",
+                        callback: action => {
+                            this.$router.push({
+                                path: '/dashboard/organizations/organizations/fromTechRequestAdd/' + this.techRequest._id
+                            });
+                        }
+                    });
+                    
+                    //there are no organizations matching this request, so user needs to go add the organization
                     // this.$router.push({
                     //     path: ''
                     // });
