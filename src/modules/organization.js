@@ -69,6 +69,7 @@ export const organization = {
             commit('setAddOrganizationLoadStatus', 1);
 
             OrganizationAPI.store(
+                data._id,
                 data.name,
                 data.legal_organization,
                 data.primary_contact,

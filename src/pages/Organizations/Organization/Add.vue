@@ -267,6 +267,7 @@ export default {
     data() {
         return {
             form: {
+                _id: "",
                 name: 'AZSSoCool',
                 legal_organization: 'AZSoCool NON PROFIT',
                 primary_contact: {
@@ -400,6 +401,11 @@ export default {
                         ] = this.upLoadName.raw;
                     }
                     this.form.thumbnail_name = this.upLoadName.name;
+
+                    //create UUID for org _id using EIN & org name
+                    this.form._id = this.form.ein.replace("-", "") + this.form.name.replace(" ", "").toLowerCase();
+
+
 
                     console.log(this.form);
                     console.log("adding organization to DB...");

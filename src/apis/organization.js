@@ -58,6 +58,7 @@ export default {
     },
 
     store: function(
+        _id,
         name,
         legal_organization,
         primary_contact,
@@ -77,7 +78,8 @@ export default {
         updated_at,
         type = 'organization'
     ) {
-        return CONFIG.LOCAL_DB.post({
+        return CONFIG.LOCAL_DB.put({
+            _id,
             type,
             name,
             legal_organization,
