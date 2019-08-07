@@ -402,14 +402,17 @@ export default {
                     }
                     this.form.thumbnail_name = this.upLoadName.name;
 
+                    let regex = /[^a-zA-Z0-9]/g;                      //only allow letters and numbers using regular expression matching
                     //create UUID for org _id using EIN & org name
-                    this.form._id = this.form.ein.replace("-", "") + this.form.name.replace(" ", "").toLowerCase();
+                    this.form._id = this.form.ein.replace(regex, "").toLowerCase() 
+                                    + "!" 
+                                    + this.form.name.replace(regex, "").toLowerCase();
 
 
 
-                    console.log(this.form);
+                    console.log(this.form._id);
                     console.log("adding organization to DB...");
-                    this.$store.dispatch('addOrganization', this.form);
+                    // this.$store.dispatch('addOrganization', this.form);
                 }
                 else{
                     this.$notify({

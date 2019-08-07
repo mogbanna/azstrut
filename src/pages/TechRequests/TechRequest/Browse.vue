@@ -155,9 +155,17 @@ export default {
         },
         handleCurrentChange(row) {
             this.currentRow = row;
-            this.$router.push({
-                path: '/dashboard/tech-requests/requests/view/' + row.id
-            });
+            //if the status of the request is new, the user needs to
+            //verify the organization's information before they can do anything else
+            if(row.status === "new") {
+                this.$router.push({
+                    path: '/tech-requests/verify/' + row.id
+                });
+            }else{
+                this.$router.push({
+                    path: '/tech-requests/view/' + row.id
+                });
+            }
         },
         handleSelectionChange(val) {
             this.displayTable = val;

@@ -1,2 +1,5 @@
 node_modules
 src/config.js
+.vscode
+#Electron-builder output
+/dist_electron

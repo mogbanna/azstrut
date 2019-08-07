@@ -193,13 +193,25 @@ const router = new Router({
                                 },
                                 {
                                     path: 'view/:techRequestId',
-                                    alias: '/tech-requests/view',
+                                    alias: '/tech-requests/view/:techRequestId',
                                     name: 'View Equiptment Request',
                                     component: () =>
                                         import ('./pages/TechRequests/TechRequest/View.vue'),
                                     meta: {
                                         parentTitle: 'Tech Requests',
                                         title: 'View Tech Request',
+                                        module: 'Tech Requests'
+                                    }
+                                },
+                                {
+                                    path: 'verify/:techRequestId',
+                                    alias: '/tech-requests/verify/:techRequestId',
+                                    name: 'View Equiptment Request',
+                                    component: () =>
+                                        import ('./pages/TechRequests/TechRequest/VerifyNew.vue'),
+                                    meta: {
+                                        parentTitle: 'Tech Requests',
+                                        title: 'Verify New Tech Request',
                                         module: 'Tech Requests'
                                     }
                                 },

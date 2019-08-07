@@ -472,26 +472,9 @@ export default {
                         d.getSeconds()
                     );
                     this.form.created_by = this.userSession.userCtx;
-
-                    //add the uploaded image to the organization to be saved in the DB
-                    // if(this.upLoadName !== ""){
-                    //     console.log(this.upLoadName);
-                    //     this.form.organization._attachments[this.upLoadName.name] = {};
-                    //     this.form.organization._attachments[
-                    //         this.upLoadName.name
-                    //     ][
-                    //         'content_type'
-                    //     ] = this.upLoadName.raw.type;
-                    //     this.form.organization._attachments[
-                    //         this.upLoadName.name
-                    //     ][
-                    //         'data'
-                    //     ] = this.upLoadName.raw;
-                    // }
-                    // this.form.organization.thumbnail_name = this.upLoadName.name;
-
+                    
                     console.log(this.form);
-                    console.log("adding organization to DB...");
+                    console.log("adding tech request to DB...");
                     this.$store.dispatch('addTechRequest', this.form);
                 }
                 else{
