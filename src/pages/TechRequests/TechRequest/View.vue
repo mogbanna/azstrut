@@ -510,30 +510,30 @@ export default {
                 if (this.techRequest.status === "new") {
 
                     //determine whether or not organization has been verified and added to the DB yet
-                    this.$store.dispatch('searchOrganizations', {
-                        query: this.techRequest.organization.name,
-                        fields: ['name'],
-                        limit: 50,
-                        skip: 0
-                    });
+                    // this.$store.dispatch('searchOrganizations', {
+                    //     query: this.techRequest.organization.name,
+                    //     fields: ['name'],
+                    //     limit: 50,
+                    //     skip: 0
+                    // });
 
                     //update the status
-                    this.techRequest.status = 'in review';
+                    // this.techRequest.status = 'in review';
 
                     //set the default todo list
-                    this.techRequest.todos = this.defaultTodos;
+                    // this.techRequest.todos = this.defaultTodos;
 
                     //add the first note
-                    this.techRequest.notes.push({
-                        text: "Request received",
-                        submitted_by: this.user.first_name + " " + this.user.last_name.charAt(0).toUpperCase() + ".",
-                        submitted_on: moment().format("LL")
-                    });
+                    // this.techRequest.notes.push({
+                    //     text: "Request received",
+                    //     submitted_by: this.user.first_name + " " + this.user.last_name.charAt(0).toUpperCase() + ".",
+                    //     submitted_on: moment().format("LL")
+                    // });
 
                     //update the request in the DB
-                    this.$store.dispatch('updateTechRequest', this.techRequest);
+                    // this.$store.dispatch('updateTechRequest', this.techRequest);
                 }
-                this.organization_verified = true;
+                // this.organization_verified = true;
             }
         },
         organizationsLoadStatus: function (val) {
@@ -559,7 +559,7 @@ export default {
                     
  //!!!!                   //add this techrequest id to the organization's info                          !!!!!!!!!!!!!!!!!!!!!
 
-                    this.organization_verified = true;
+                    // this.organization_verified = true;
                 } else {
                     //notify the user to add the organization's info to DB
                     this.$alert('Please add this organization to the records first.', 'New Organization Detected!', {

@@ -181,7 +181,7 @@ export const user = {
              * Test if there is internet connection. if there isnt, get 
              * session from the local storage. but if there is internet 
              * connection, the session should always be gotten from the 
-             * serve.
+             * server.
              */
 
             if (!navigator.onLine &&

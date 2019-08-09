@@ -45,8 +45,69 @@ const router = new Router({
     routes: [{
             path: '/',
             name: 'Home',
+            beforeEnter: requireAuth,
             component: () =>
                 import ('./views/Home.vue')
+        },
+        {
+            path: '/administrator',
+            beforeEnter: requireAuth,
+            component: DashboardLayout,
+            children: [{
+                path: '',
+                beforeEnter: requireAuth,
+                components: {
+                    default: () =>
+                        import ('./views/Admin/App.vue'),
+                    header: () =>
+                        import ('./views/Dashboard/DefaultHeader.vue')
+                },
+                children: [{
+                        path: '',
+                        beforeEnter: requireAuth,
+                        alias: '/administrator/dashboard',
+                        name: 'Admin Dash',
+                        component: () =>
+                            import ('./pages/Admin/Dashboard.vue')
+                    },
+                    {
+                        path: 'users',
+                        beforeEnter: requireAuth,
+                        alias: '/admin/users',
+                        name: "Users",
+                        component: () =>
+                            import ('./views/Admin/Users.vue'),
+                        children: [{
+                                path: '',
+                                alias: 'administrator/browse/users',
+                                component: () =>
+                                    import ('./pages/Admin/Users/Browse.vue')
+                            },
+                            {
+                                path: 'view/:username',
+                                alias: 'administrator/view/user/:username',
+                                name: 'View User',
+                                component: () =>
+                                    import ('./pages/Admin/Users/View.vue')
+                            },
+                            {
+                                path: 'add',
+                                alias: 'administrator/add/user',
+                                name: 'View User',
+                                component: () =>
+                                    import ('./pages/Admin/Users/Add.vue')
+                            },
+                            {
+                                path: 'update/:username',
+                                alias: 'administrator/update/user/:username',
+                                name: 'View User',
+                                component: () =>
+                                    import ('./pages/Admin/Users/View.vue')
+                            }
+                        ]
+                    }
+                ]
+            }]
         },
         {
             path: '/dashboard',
@@ -104,6 +165,7 @@ const router = new Router({
                                 },
                                 {
                                     path: 'view/:organizationId',
+                                    alias: '/organizations/view/:organizationId',
                                     name: 'View Organization',
                                     component: () =>
                                         import ('./pages/Organizations/Organization/View.vue'),
@@ -114,8 +176,8 @@ const router = new Router({
                                     }
                                 },
                                 {
-                                    path: 'add',
-                                    alias: '/organizations/add',
+                                    path: 'add/:techRequestId?',
+                                    alias: '/organizations/add/:techRequestId?',
                                     name: 'Add Organization',
                                     component: () =>
                                         import ('./pages/Organizations/Organization/Add.vue'),

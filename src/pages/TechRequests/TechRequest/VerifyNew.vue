@@ -4,8 +4,9 @@
         <div class="col-lg-8 col-md-7">
                 <card>
                     <h5 class="title">Verify Organization on Request</h5>
-                        <p class="text-muted">Please use the search to find to match this information with
-                            the organizations we have on record.
+                        <p class="text-muted">Please use the search to match this information with
+                            the organizations we have on record. <br>This helps us make sure we don't keep
+                            duplicate files on record :)
                         </p>
                         <card>
                             <!-- <h5 slot="header" class="title">Submitted Info</h5> -->
@@ -60,7 +61,7 @@
                             aria-controls="datatables">
                 </el-input>
                 <p class="mt-2 text-muted"> No matching Organization?
-                    <router-link :to="{ path: '/organizations/add'}">Click here</router-link>
+                    <router-link :to="{ path: '/organizations/add/' + techRequest._id}">Click here</router-link>
                 </p>
                 <el-table
                     ref="searchTable"
@@ -220,6 +221,7 @@ export default {
         },
         updateTechRequest(){
             let tr = this.techRequest;
+            
             //udpate organization info on tech request
             tr.organization.name = this.organization.name;
             tr.organization.ein = this.organization.ein;

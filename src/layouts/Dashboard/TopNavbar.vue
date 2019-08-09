@@ -8,6 +8,14 @@
       <a class="navbar-brand" href="#pablo">
         {{$route.name}}
       </a>
+<!-- temp back button -->
+            <n-button
+                    type="neutral"
+                    @click.native="$router.go(-1)"
+                    round=""
+                    icon="">
+                    <i class="now-ui-icons arrows-1_minimal-left"></i>                
+                </n-button>
     </div>
     <button @click="toggleNavbar" class="navbar-toggler" type="button" data-toggle="collapse"
             data-target="#navigation"

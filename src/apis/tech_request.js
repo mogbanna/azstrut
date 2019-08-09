@@ -18,6 +18,16 @@ export default {
         });
     },
 
+    find: function(
+        startkey,
+        endkey
+    ) {
+        return CONFIG.LOCAL_DB.allDocs({
+            startkey: startkey,
+            endkey: endkey + "-\uffff"
+        });
+    },
+
     search: function(
         query,
         fields,
@@ -49,7 +59,7 @@ export default {
         todos = [],
         notes = [],
         created_by = {},
-        created_at = [],
+        submitted_on = [],
         completed_at = [],
         type = 'tech_request'
     ) {
@@ -66,7 +76,7 @@ export default {
             todos,
             notes,
             created_by,
-            created_at,
+            submitted_on,
             completed_at
         });
     },
@@ -91,7 +101,7 @@ export default {
         todos,
         notes,
         created_by,
-        created_at,
+        submitted_on,
         completed_at,
         type
     ) {
@@ -110,7 +120,7 @@ export default {
             todos,
             notes,
             created_by,
-            created_at,
+            submitted_on,
             completed_at
         });
     },

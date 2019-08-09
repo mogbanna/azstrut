@@ -18,6 +18,15 @@ export default {
         });
 
     },
+    find: function(
+        startkey,
+        endkey
+    ) {
+        return CONFIG.LOCAL_DB.allDocs({
+            startkey: "org-" + startkey + "-",
+            endkey: "org-" + endkey + "-\uffff"
+        });
+    },
 
     // getOrganizationRequests: function(
     //     ein,
@@ -65,14 +74,9 @@ export default {
         secondary_contact,
         organization_type,
         website,
-        social_media,
         ein,
         acc_file,
-        requests,
-        camps,
         notes,
-        thumbnail_name,
-        _attachments,
         created_by,
         created_at,
         updated_at,
@@ -87,14 +91,9 @@ export default {
             secondary_contact,
             organization_type,
             website,
-            social_media,
             ein,
             acc_file,
-            requests,
-            camps,
             notes,
-            thumbnail_name,
-            _attachments,
             created_by,
             created_at,
             updated_at,
@@ -116,14 +115,9 @@ export default {
         secondary_contact,
         organization_type,
         website,
-        social_media,
         ein,
         acc_file,
-        requests,
-        camps,
         notes,
-        thumbnail_name,
-        _attachments,
         created_by,
         created_at,
         updated_at,
@@ -139,14 +133,9 @@ export default {
             secondary_contact,
             organization_type,
             website,
-            social_media,
             ein,
             acc_file,
-            requests,
-            camps,
             notes,
-            thumbnail_name,
-            _attachments,
             created_by,
             created_at,
             updated_at,

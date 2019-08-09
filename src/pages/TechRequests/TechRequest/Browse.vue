@@ -118,13 +118,14 @@ export default {
     watch: {
         techRequestsLoadStatus: function(val) {
             if(val == 2) {
-
-
+                /**
+                 * laod tech request info to the display table
+                 */
                 this.techRequests.rows.forEach(tech => {
                     let temp = {};
 
                     temp.id = tech.doc._id;
-                    temp.date = moment(tech.doc.created_at).format('LL');
+                    temp.date = moment(tech.doc.submitted_at).format('LL');
                     temp.organization = tech.doc.organization.name;
                     temp.status = tech.doc.status;
 
@@ -155,13 +156,18 @@ export default {
         },
         handleCurrentChange(row) {
             this.currentRow = row;
-            //if the status of the request is new, the user needs to
-            //verify the organization's information before they can do anything else
+
+            /**
+             * if the status of the request is new,
+             * user must verify organization's info
+             * beofre they can view the request 
+             */
+
             if(row.status === "new") {
                 this.$router.push({
                     path: '/tech-requests/verify/' + row.id
                 });
-            }else{
+            } else{
                 this.$router.push({
                     path: '/tech-requests/view/' + row.id
                 });

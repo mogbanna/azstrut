@@ -73,7 +73,7 @@ export default {
       loginUserLoadStatus: function(val) {
           if(val == 2) {
               this.$router.push({
-                  path: '/dashboard'
+                  path: '/dashboard-main'
               });
           }
       }
@@ -87,7 +87,6 @@ export default {
       if (!isValidForm) {
           console.log("There's and issue logging in..");
       }else {
-          console.log(this.form);
           this.$store.dispatch('loginUser', {
               username: this.form.username,
               password: this.form.password

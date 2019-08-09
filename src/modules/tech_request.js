@@ -52,6 +52,20 @@ export const techRequest = {
                 commit('setTechRequest', response);
             });
         },
+        findTechRequests: function({ commit }, data) {
+            commit('setTechRequestsLoadStatus', 1);
+
+            TechRequestAPI.find(
+                data.startkey,
+                data.endkey
+            ).then(function(response) {
+                commit('setTechRequestsLoadStatus', 2);
+                commit('setTechRequests', response);
+            }).catch(function(response) {
+                commit('setTechRequestsLoadStatus', 3);
+                commit('setTechRequests', []);
+            });
+        },
         searchTechRequests: function({ commit }, data) {
             commit('setTechRequestsLoadStatus', 1);
 
@@ -83,7 +97,7 @@ export const techRequest = {
                 dat.todos,
                 data.notes,
                 data.created_by,
-                data.created_at,
+                data.submitted_on,
                 data.completed_at
             ).then(function(response) {
                 commit('setAddTechRequestLoadStatus', 2);
@@ -109,7 +123,7 @@ export const techRequest = {
                 data.todos,
                 data.notes,
                 data.created_by,
-                data.created_at,
+                data.submitted_on,
                 data.completed_at,
                 data.type
             ).then(function(response) {

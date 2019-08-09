@@ -49,6 +49,20 @@ export const organization = {
                 commit('setOrganization', response);
             });
         },
+        findOrganizations: function({ commit }, data) {
+            commit('setOrganizationsLoadStatus', 1);
+
+            OrganizationAPI.find(
+                data.startkey,
+                data.endkey
+            ).then(function(response) {
+                commit('setOrganizationsLoadStatus', 2);
+                commit('setOrganizations', response);
+            }).catch(function(response) {
+                commit('setOrganizationsLoadStatus', 3);
+                commit('setOrganizations', []);
+            });
+        },
         searchOrganizations: function({ commit }, data) {
             commit('setOrganizationsLoadStatus', 1);
 
@@ -76,14 +90,9 @@ export const organization = {
                 data.secondary_contact,
                 data.organization_type,
                 data.website,
-                data.social_media,
                 data.ein,
                 data.acc_file,
-                data.requests,
-                data.camps,
                 data.notes,
-                data.thumbnail_name,
-                data._attachments,
                 data.created_by,
                 data.created_at,
                 data.updated_at
@@ -107,14 +116,9 @@ export const organization = {
                 data.secondary_contact,
                 data.organization_type,
                 data.website,
-                data.social_media,
                 data.ein,
                 data.acc_file,
-                data.requests,
-                data.camps,
                 data.notes,
-                data.thumbnail_name,
-                data._attachments,
                 data.created_by,
                 data.created_at,
                 data.updated_at,
