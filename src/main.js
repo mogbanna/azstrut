@@ -9,10 +9,10 @@ Vue.use(DashboardPlugin);
 
 
 /**
- * https://www.npmjs.com/package/vue-json-excel
+ * https://github.com/jecovier/vue-json-excel
  */
-// import JsonExcel from 'vue-json-excel';
-// Vue.component('DownloadExcel', JsonExcel);
+import JsonExcel from 'vue-json-excel';
+Vue.component('downloadExcel', JsonExcel);
 
 /**
  * https://www.npmjs.com/package/vue-print-nb

@@ -10,7 +10,40 @@
     <div class="row">
         <div class="col-12" v-loading="techRequestsLoadStatus == 1">
             <card card-body-classes="table-full-width" no-footer-line>
-                <h4 slot="header" class="card-title">Equiptment Requests</h4>
+                <div class="row" slot="header">
+                    <div class="col-11">
+                        <h4 class="card-title">Equiptment Requests</h4>
+                    </div>
+                    <div class="col-1">
+                        <drop-down
+                                position="right"
+                                class="nav-item"
+                                icon="now-ui-icons objects_spaceship">
+
+                            <download-excel
+                                v-show="allDownloaded"
+                                class="dropdown-item"
+                                :fields="json_fields"
+                                worksheet="My Worksheet"
+                                name="azstrut-all-tech-requests.xls" 
+                                type="csv"
+                                :data="allTechRequests">
+                                Export All
+                            </download-excel>
+                            <download-excel
+                                v-show="tableSelection.length > 0"
+                                class="dropdown-item"
+                                :fields="json_fields"
+                                worksheet="My Worksheet"
+                                name="azstrut-selected-tech-requests.xls" 
+                                type="csv"
+                                :data="tableSelection">
+                                Export Selected
+                            </download-excel>
+                        <!-- <a class="dropdown-item" href="#">Print</a> -->
+                        </drop-down>
+                    </div>
+                </div>
                 <div>
                     <el-table
                         ref="displayTable"
@@ -18,6 +51,11 @@
                         style="width: 100%;"
                         @current-change="handleCurrentChange"
                         @selection-change="handleSelectionChange">
+                            <el-table-column
+                                type="selection"
+                                width="55"
+                            >
+                            </el-table-column>
                             <el-table-column
                                 prop="date"
                                 label="Date"
@@ -70,6 +108,7 @@
 import { Tag } from 'element-ui';
 import { Pagination as NPagination } from '@/components';
 import moment from 'moment';
+import { CONFIG } from '@/config.js';
 
 export default {
     components: {
@@ -84,6 +123,9 @@ export default {
                 skip: 0
             },
             tableData: [],
+            tableSelection: [],
+            allTechRequests:[],
+            allDownloaded: false,
             tableColumns: [
                 {
                     prop: 'date',
@@ -100,12 +142,27 @@ export default {
                     label: 'Status',
                     minWidth: 100
                 }
-            ]
+            ],
+            json_fields: {
+                    'ID': 'id',
+                    'Submission Date': 'date',
+                    'Organization Name': 'doc.organization.name',
+                    'Organizaton EIN': 'doc.organization.ein',
+                    'Primary Contact Name': 'doc.organization.primary_contact.full_name',
+                    'Primary Contact Phone': 'doc.organization.primary_contact.phone',
+                    'Primary Contact Email': 'doc.organization.primary_contact.email',
+                    '# of Desktops': 'doc.num_desktops',
+                    '# of Laptops': 'doc.num_laptops',
+                    'Usage': 'doc.usage',
+                    'Additional Equiptment': 'doc.other_items',
+                    'Comments': 'doc.comments',
+                },
             
         };
     },
     created() {
         this.$store.dispatch('loadTechRequests', this.loadOptions);
+        this.downloadAllTR();
     },
     computed: {
         techRequests() {
@@ -139,6 +196,7 @@ export default {
         },
         techRequestsLoadStatus: function(val) {
             if(val == 2) {
+
                 /**
                  * laod tech request info to the display table
                  */
@@ -146,9 +204,10 @@ export default {
                     let temp = {};
 
                     temp.id = tech.doc._id;
-                    temp.date = moment(tech.doc.submitted_at).format('LL');
+                    temp.date = moment(tech.doc.submitted_on, "YYYY-MM-DD").format('LL');
                     temp.organization = tech.doc.organization.name;
                     temp.status = tech.doc.status;
+                    temp.doc = tech.doc;
 
                     this.tableData.push(temp);
                 });
@@ -199,7 +258,7 @@ export default {
             }
         },
         handleSelectionChange(val) {
-            this.displayTable = val;
+            this.tableSelection = val;
         },
         verifyOrg(techRequestid) {
             this.$router.push({
@@ -210,6 +269,24 @@ export default {
             this.$router.push({
                     path: '/tech-requests/view/' + id
                 });
+        },
+        downloadAllTR(){
+            CONFIG.LOCAL_DB.allDocs({
+                include_docs: true,
+                startkey: 'tr-',
+                endkey: 'tr-\uffff',
+            }).then(response => {
+                this.allDownloaded = true;
+                response.rows.forEach(tr => {
+                    this.allTechRequests.push({
+                        date: moment(tr.doc.submitted_on, "YYYY-MM-DD").format('LL'),
+                        id: tr.id,
+                        doc: tr.doc
+                    });
+                });
+            }).catch((err) => {
+                console.log('Trouble downloading all tech requests');
+            });
         }
     },
 }
