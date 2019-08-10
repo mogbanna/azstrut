@@ -23,8 +23,8 @@ export default {
         endkey
     ) {
         return CONFIG.LOCAL_DB.allDocs({
-            startkey: "org-" + startkey + "-",
-            endkey: "org-" + endkey + "-\uffff"
+            startkey: "org-" + startkey,
+            endkey: "org-" + endkey + "\uffff"
         });
     },
 

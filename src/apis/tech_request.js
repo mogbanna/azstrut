@@ -24,7 +24,7 @@ export default {
     ) {
         return CONFIG.LOCAL_DB.allDocs({
             startkey: startkey,
-            endkey: endkey + "-\uffff"
+            endkey: endkey + "\uffff"
         });
     },
 

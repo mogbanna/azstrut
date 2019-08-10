@@ -113,9 +113,30 @@ export default {
         },
         techRequestsLoadStatus() {
             return this.$store.getters.getTechRequestsLoadStatus;
+        },
+        organizations() {
+            return this.$store.getters.getOrganizations;
+        },
+        organizationsLoadStatus() {
+            return this.$store.getters.getOrganizationsLoadStatus;
         }
     },
     watch: {
+        organizationsLoadStatus: function(val) {
+            if(val == 2) {
+                /**
+                 * if there is one organization found, allow
+                 * the user to continue viewing the request.
+                 * organization verification not needed
+                 */
+                if(this.organizations.rows.length === 1) {
+                    this.viewTechRequest(this.currentRow.id);
+                }else{
+                    this.verifyOrg(this.currentRow.id);
+                }
+                
+            }    
+        },
         techRequestsLoadStatus: function(val) {
             if(val == 2) {
                 /**
@@ -160,22 +181,36 @@ export default {
             /**
              * if the status of the request is new,
              * user must verify organization's info
-             * beofre they can view the request 
+             * before they can view the request 
              */
-
             if(row.status === "new") {
-                this.$router.push({
-                    path: '/tech-requests/verify/' + row.id
+                /**
+                 * check if we have an organization saved with
+                 * the same ein as the tech request
+                 */
+                var ein = row.id.slice(3,13);                   //extract the ein from the tech request's _id
+
+                this.$store.dispatch('findOrganizations', {
+                    startkey: ein + '-',
+                    endkey: ein + '-'
                 });
-            } else{
-                this.$router.push({
-                    path: '/tech-requests/view/' + row.id
-                });
+            } else {
+                this.viewTechRequest(row.id);
             }
         },
         handleSelectionChange(val) {
             this.displayTable = val;
         },
+        verifyOrg(techRequestid) {
+            this.$router.push({
+                path: '/tech-requests/verify/' + techRequestid
+            });            
+        },
+        viewTechRequest(id){
+            this.$router.push({
+                    path: '/tech-requests/view/' + id
+                });
+        }
     },
 }
 </script>

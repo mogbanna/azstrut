@@ -5,6 +5,10 @@
         text-align: center;
         width: 100%;
     }
+    #addition{
+        color: #f96332;
+        font-weight: bold;
+    }
 </style>
 
 <template>
@@ -14,7 +18,7 @@
 
                 <!-- BEGIN TODO ROW -->
                 <div class="row" id="toDoRow">
-                    <card class="card-tasks" no-footer-line v-if="organization_verified">
+                    <card class="card-tasks" no-footer-line>
                         <template slot="header">
                             <h6 class="title">Todo List</h6>
                             <p class="category mt-1 mb-0">Keep a list of what needs to be done next with this Equiptment Request</p>
@@ -128,9 +132,40 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="statistics">
+                                                    <div class="info">
+                                                        <h6 class="stats-title">Additional Equiptment</h6>
+                                                        <el-button-group>
+                                                            <el-button id="addition" type="plain" v-for="item in additional_equiptment" :key="item">{{ item.replace(",", "") }}</el-button>
+                                                        </el-button-group>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            <!-- START ADDITIONAL EQUIPTMENT -->
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="card-stats justify-content-center">
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- END ADDITIONAL EQUIPTMENT -->
+                            <!-- COMMENTS -->
+                            <p>Comments</p>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <p class="blockquote blockquote-primary">
+                                        {{ techRequest.organization.notes }}
+                                    </p>
+                                </div>
+                            </div>
+                            <!-- END COMMENTS -->
                             <div class="row">
                                 <card class="card-contributions">
                                     <div class="row justify-content-center" slot="header">
@@ -226,34 +261,6 @@
                                             </div>
                                         </collapse-item>
                                     </collapse>
-                                    <!-- NOTES -->
-                                    <p>Notes</p>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <p class="blockquote blockquote-primary">
-                                                {{ techRequest.organization.notes }}
-                                            </p>
-                                        </div>
-                                    </div>
-                                        <!-- END NOTES -->
-                                    <!-- <p class="card-description">
-                                        After a very successful two-year run, we’re going to be changing the way that contributions work.
-                                    </p> -->
-
-                                    <div class="row" slot="footer">
-                                        <div class="col-6">
-                                            <div class="card-stats justify-content-center">
-                                                <!-- <n-switch v-model="allContributions" on-text="ON" off-text="OFF"></n-switch>
-                                                <span>All public contributions</span> -->
-                                            </div>
-                                        </div>
-                                        <div class="col-6">
-                                            <div class="card-stats justify-content-center">
-                                                <!-- <n-switch v-model="pastWeekContributions" on-text="ON" off-text="OFF"></n-switch>
-                                                <span>Past week contributions</span> -->
-                                            </div>
-                                        </div>
-                                    </div>
                                 </card>
                                 <!-- END ORGANIZATION INFO CARD -->
 
@@ -275,33 +282,13 @@
                 <div class="row"  v-loading="organizationsLoadStatus == 1">
                     <card>
                         <div slot="header" class="text-center">
-                            <h5 class="title text-danger" v-if="!organization_verified">Please Verify Organization !</h5>
-                            <h6 class="title" v-else>Update Status</h6>
+                            <h6 class="title" >Update Status</h6>
                         </div>
-                        <div class="cardbody py-0" v-if="!organization_verified">
-                            <div class="row">
-                                <el-table
-                                    ref="orgTable"
-                                    stripe
-                                    :data="searchResult"
-                                    empty-text="No Matches Yet"
-                                    style="width: 100%"
-                                    highlight-current-row
-                                    @current-change="handleCurrentChange"
-                                    >
-                                <el-table-column
-                                    label="Saved Organizations"
-                                    prop="name">
-                                </el-table-column>
-                                </el-table>
-                            </div>
-                        </div>
-                        <div class="card-body py-0" v-else>
+                        <div class="card-body py-0">
                             <div class="row">
                                 <n-button 
                                     type="success" 
                                     block 
-                                    
                                     @click.native="confirmStatusUpdate('approved')">
                                     <i class="now-ui-icons ui-2_like"></i>
                                     Approve
@@ -331,7 +318,7 @@
 
                 <!-- BEGIN NOTES ROW -->
                 <div id="notesRow" class="row">
-                    <card v-if="organization_verified">
+                    <card>
                         <div slot="header">
                             <h6 class="title">Notes</h6>
                             <!-- allow user to submit the note by hitting enter -->
@@ -383,7 +370,6 @@ import moment from 'moment';
 import {
     StatsCard,
     Table as NTable,
-    // Checkbox,
     Collapse,
     CollapseItem,
     AnimatedNumber
@@ -397,7 +383,8 @@ import {
     Option,
     Tag,
     Checkbox,
-    Button
+    Button,
+    ButtonGroup
 } from 'element-ui';
 import swal from 'sweetalert2';
 
@@ -416,15 +403,18 @@ export default {
         CollapseItem,
         AnimatedNumber,
         [Checkbox.name]: Checkbox,
-        [Button.name]: Button
+        [Button.name]: Button,
+        [ButtonGroup.name]: ButtonGroup
     },
     data() {
         return {
+            current_user: "",
             statusTagColor: "",
             input: {
                 note: "",
                 todo: ""
             },
+            additional_equiptment: [],
             defaultTodos: [{
                     message: 'Verify all information submitted by organization',
                     done: false,
@@ -438,39 +428,29 @@ export default {
                     done: false,
                 }
             ],
-            requestStatuses: [{
-                    value: "On Hold",
-                    label: "On Hold",
-                },
-                {
-                    value: "Deny",
-                    label: "Deny"
-                },
-                {
-                    value: "Approve",
-                    lable: "Approve"
-                }
-            ],
             currentRow: null,
             organization_verified: false,
             searchResult: []
         };
     },
-    mounted() {
-
-    },
     created() {
+        //load user info
+        this.$store.dispatch('loadUser', {
+            username: this.$store.getters.getUserSession.userCtx.name
+        });
 
         //make sure to check for what the current status is and set the color accordingly
         this.$store.dispatch('loadTechRequest', {
             id: this.$route.params.techRequestId
         });
-        //load user info
-        this.$store.dispatch('loadUser', {
-            username: this.$store.getters.getUserSession.userCtx.name
-        });
     },
     computed: {
+        user() {
+            return this.$store.getters.getUser;
+        },
+        userLoadStatus() {
+            return this.$store.getters.getUserLoadStatus;
+        },
         techRequest() {
             return this.$store.getters.getTechRequest;
         },
@@ -483,18 +463,9 @@ export default {
         organizationsLoadStatus() {
             return this.$store.getters.getOrganizationsLoadStatus;
         },
-        user() {
-            return this.$store.getters.getUser;
+        userSessionLoadStatus() {
+            return this.$store.getters.getUserSessionLoadStatus;
         },
-        userLoadStatus() {
-            return this.$store.getters.getUserLoadStatus;
-        },
-        // userSession() {
-        //     return this.$store.getters.getUserSession;
-        // },
-        // userSessionLoadStatus() {
-        //     return this.$store.getters.getUserSessionLoadStatus;
-        // }
         updateTechRequestLoadStatus() {
             return this.$store.getters.getUpdateTechRequestLoadStatus;
         },
@@ -503,98 +474,52 @@ export default {
         }
     },
     watch: {
+        userLoadStatus: function(val) {
+            if(val == 2){
+                this.current_user = this.user.first_name + " " + this.user.last_name.charAt(0).toUpperCase() + ".";
+            }
+        },
         techRequestLoadStatus: function (val) {
             if (val == 2) {
+                this.additional_equiptment = this.techRequest.other_items.trim().split(', ');
 
                 //check if this is the first time opening the techRequest
                 if (this.techRequest.status === "new") {
-
-                    //determine whether or not organization has been verified and added to the DB yet
-                    // this.$store.dispatch('searchOrganizations', {
-                    //     query: this.techRequest.organization.name,
-                    //     fields: ['name'],
-                    //     limit: 50,
-                    //     skip: 0
-                    // });
-
-                    //update the status
-                    // this.techRequest.status = 'in review';
-
-                    //set the default todo list
-                    // this.techRequest.todos = this.defaultTodos;
-
+                    this.techRequest.status = 'in review';
+                    this.techRequest.notes = [];
+                    //add default todo list
+                    this.techRequest.todos = this.defaultTodos;
                     //add the first note
-                    // this.techRequest.notes.push({
-                    //     text: "Request received",
-                    //     submitted_by: this.user.first_name + " " + this.user.last_name.charAt(0).toUpperCase() + ".",
-                    //     submitted_on: moment().format("LL")
-                    // });
+                    this.techRequest.notes.push({
+                        text: "Request received.",
+                        submitted_by: this.current_user,
+                        submitted_on: moment().format("LL")
+                    });
 
                     //update the request in the DB
-                    // this.$store.dispatch('updateTechRequest', this.techRequest);
-                }
-                // this.organization_verified = true;
-            }
-        },
-        organizationsLoadStatus: function (val) {
-            if (val == 2) {
-                let orgs = this.organizations;
-
-                /*if more than one organization returned, display table to user 
-                so they can choose which organization will be associated with this request */
-                if (orgs.total_rows > 1) {
-                    /*loop through each organization and provide the 
-                    name in the table for the user to select
-                    if user selects a name, we need to update the 
-                    information displayed on the form with the
-                    in the database */
-                    orgs.rows.forEach(org => {
-                        let temp = {};
-                        temp.id = org.doc._id;
-                        temp.name = org.doc.name;
-                        this.searchResult.push(temp);
-                    });
-                } else if (orgs.total_rows == 1) {
-                    //only one match for organization in DB, so user can continue editing tech request
-                    
- //!!!!                   //add this techrequest id to the organization's info                          !!!!!!!!!!!!!!!!!!!!!
-
-                    // this.organization_verified = true;
-                } else {
-                    //notify the user to add the organization's info to DB
-                    this.$alert('Please add this organization to the records first.', 'New Organization Detected!', {
-                        confirmButtonText: "Let's go!",
-                        callback: action => {
-                            this.$router.push({
-                                path: '/dashboard/organizations/organizations/fromTechRequestAdd/' + this.techRequest._id
-                            });
-                        }
-                    });
-                    
-                    //there are no organizations matching this request, so user needs to go add the organization
-                    // this.$router.push({
-                    //     path: ''
-                    // });
+                    this.updateTR();
                 }
             }
-        },
-        techRequest: {
-            handler(val) {
-                // console.log(val);
-                // console.log('_____________');
-                // console.log(newV);
-            },
-            deep: true
         },
         updateTechRequestLoadStatus: function (val) {
             if (val == 2) {
-                console.log('Updated request successfully');
-
+                this.$message({
+                    message: 'Successfully Updated',
+                    type: 'success'
+                });
                 //reload the tech request so we can have the right _rev number for next update
                 this.$store.dispatch('loadTechRequest', {
                     id: this.$route.params.techRequestId
                 });
 
+            }
+        },
+        updateTechRequestResponse: function(val) {
+            if(!val.ok){
+                this.$message({
+                    message: 'Trouble connecting to the Database. Please try again..',
+                    type: 'danger'
+                });
             }
         }
     },
@@ -602,27 +527,23 @@ export default {
         addNote(text) {
             if (text.length > 1) {
                 let t = text;
-                let by = this.user.first_name + " " + this.user.last_name.charAt(0) + "."; //change to logged in user's name
-                let on = moment().format('LL'); //change to today's date using monment
+                let by = this.current_user; 
+                let on = moment().format('LL'); 
 
                 this.techRequest.notes.push({
                     text: t,
                     submitted_by: by,
                     submitted_on: on
                 });
-                this.$message({
-                    message: 'Note added successfully',
-                    type: 'success'
-                });
                 //update the DB
-                this.$store.dispatch('updateTechRequest', this.techRequest);
+                this.updateTR();
             }
             this.input.note = "";
         },
         updateStatus(status) {
 
-            let text = "Report's status changed to '" + status + "'.";
-            let submitted_by = this.user.first_name + " " + this.user.last_name.charAt(0) + ".";
+            let text = "Status changed to '" + status + "'.";
+            let submitted_by = this.current_user;
             let submitted_on = moment().format('LL');
             let color = "";
 
@@ -663,23 +584,17 @@ export default {
                 default:
                     break;
             }
-            //update DB
-            this.$store.dispatch('updateTechRequest', this.techRequest);
+            this.updateTR();
         },
         confirmStatusUpdate(status) {
-            let message = "Are you sure you want to update this request's status to: ''" + status + "'? You cannot undo this action."
-            let approveMessage = "Successfully change this request's status to: ''" + status + "'.";
-            let errorMessage = "Status was NOT updated."
+            let message = "Are you sure you want to update this request's status to: ''" + status + "'? You cannot undo this action.";
+            let errorMessage = "Status was NOT updated.";
 
-            this.$confirm(message, 'Updating Status', {
+            this.$confirm(message, 'Update Status', {
                 confirmButtonText: 'Submit',
                 cancelButtonText: 'Cancel',
             }).then(() => {
                 this.updateStatus(status);
-                this.$message({
-                    message: approveMessage,
-                    type: 'success'
-                });
             }).catch(() => {
                 this.$message({
                     message: errorMessage,
@@ -695,45 +610,39 @@ export default {
         },
         addTodo(val) {
             //todo must be at least 5 characters long-- to help prevent accidental things being added
-            if (val.length > 5)
-
+            if (val.length > 5){
                 this.techRequest.todos.push({
                     message: val,
                     done: false
                 });
-
             //update the DB
-            this.$store.dispatch('updateTechRequest', this.techRequest);
+            this.updateTR();
 
             //clear input for to add another todo 
             this.input.todo = "";
-
+            }
         },
         removeTodo(index) {
-            this.$confirm('Are you sure you want to delete this todo?', 'Danger', {
+            this.$confirm('Are you sure you want to delete this todo?', 'Delete Todo', {
                 confirmButtonText: 'Yes',
                 cancelButtonText: 'Cancel',
                 type: 'danger'
             }).then(() => {
                 if (index >= 0) {
-
                     //remove todo
                     this.techRequest.todos.splice(index, 1);
-
                     //update the DB
-                    this.$store.dispatch('updateTechRequest', this.techRequest);
+                    this.updateTR();
                 }
-
-                this.$message({
-                    type: 'success',
-                    message: 'Successfully deleted todo'
-                });
             }).catch(() => {
                 this.$message({
                     type: 'info',
                     message: 'The todo was NOT deleted'
                 });
             });
+        },
+        updateTR(){
+            this.$store.dispatch('updateTechRequest', this.techRequest);
         }
     },
 }

@@ -88,6 +88,7 @@
 import { Select, Option } from 'element-ui';
 import { Modal } from '@/components'
 import Fuse from 'fuse.js';
+import moment from 'moment';
 
 export default {
     components: {
@@ -97,8 +98,8 @@ export default {
     },
     data() {
         return {
+            current_user: '',
             organization: {
-                organization_id: '',
                 name: '',
                 ein: ''
             },
@@ -134,9 +135,6 @@ export default {
         organizationsLoadStatus() {
             return this.$store.getters.getOrganizationsLoadStatus;
         },
-        updateOrganizationLoadStatus() {
-            return this.$store.getters.getUpdateOrganizationLoadStatus;
-        },
         techRequest() {
             return this.$store.getters.getTechRequest;
         },
@@ -145,24 +143,40 @@ export default {
         },
         updateTechRequestLoadStatus() {
             return this.$store.getters.getUpdateTechRequestLoadStatus;
+        },
+        userSession() {
+            return this.$store.getters.getUserSession;
+        },
+        userSessionLoadStatus() {
+            return this.$store.getters.getUserSessionLoadStatus;
+        },
+        user() {
+            return this.$store.getters.getUser;
+        },
+        userLoadStatus() {
+            return this.$store.getters.getUserLoadStatus;
         }
     },
     watch: {
-        updateOrganizationLoadStatus: function(val){
+        userLoadStatus: function(val) {
             if(val == 2) {
-                console.log('updated org successfully!');
-                this.$router.push({
-                    path: "/tech-requests/view/" + this.techRequest._id
+                this.current_user = this.user.first_name + " " + this.user.lastName.charAt(0).toUpperCase() + ".";
+            }
+        },
+        userSessionLoadStatus: function(val) {
+            if(val == 2) {
+                //get the user's name for the tech request's notes
+                this.$store.dispatch('loadUser', {
+                    id: this.userSession.userCtx.name
                 });
             }
         },
         updateTechRequestLoadStatus: function(val) {
-            console.log('updated TR successfully!');
-            console.log("trying to update organization's requests");
-            console.log(this.techRequest);
-            //update the requests associated with this organization
-            this.organization.requests.push(this.techRequest._id);
-            this.$store.dispatch('updateOrganization', this.organization);
+            if(val == 2) {
+                this.$router.push({
+                    path: "/tech-requests/view/" + this.techRequest._id
+                });
+            }            
         },
         searchQuery: function(val) {
             if(val !== ""){
@@ -182,7 +196,6 @@ export default {
                 let temp = [];
                 this.organizations.rows.forEach(org => {
                     let x = {};
-                    x.id = org.doc._id;
                     x.name = org.doc.name;
                     x.ein = org.doc.ein;
 
@@ -200,8 +213,6 @@ export default {
     },
     methods: {
         addOrgInfo(org){
-            //load information to form
-            this.organization.organization_id = org.id;
             this.organization.name = org.name;
             this.organization.ein = org.ein;
         },
@@ -213,7 +224,6 @@ export default {
                 this.organizationFound = true;
                 this.currentRow = val;
                 this.addOrgInfo(val);
-
             }
         },
         searchOrg(val) {
@@ -225,33 +235,13 @@ export default {
             //udpate organization info on tech request
             tr.organization.name = this.organization.name;
             tr.organization.ein = this.organization.ein;
+            tr.notes = [{
+                text: "Organization information verified & updated.",
+                submitted_by: this.current_user,
+                submitted_on: moment().format("LL")
+            }];
+            
 
-            //update id for tech requests becuase it was assigned a random one when it comes from WP site
-            let regex = /[^a-zA-Z0-9]/g;                     
-            //create UUID for request _id using org EIN, org name & date it was created
-            tr._id =
-                            this.organization.ein.replace(regex, "").toLowerCase() 
-                            + "!" 
-                            + this.organization.name.replace(regex, "").toLowerCase()
-                            + "-"
-                            + tr.submitted_on
-                            + "!tr";
-            tr.created_at = tr.submitted_on.split("-");
-
-            //convert the strings from the split method to int- for consistency
-            for(var i = 0; i < tr.created_at.length; i++){
-                tr.created_at[i] = parseInt(tr.created_at[i]);
-            }   
-
-            let d = new Date();
-            tr.created_at.push(
-                d.getHours(),
-                d.getMinutes(),
-                d.getSeconds()
-            );
-
-            console.log(tr);
-            console.log("adding TR to DB...");
             this.$store.dispatch('updateTechRequest', tr);
         }
     }

@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import store from './store';
+import Store from './store';
 
 import DashboardLayout from './layouts/Dashboard/DashboardLayout.vue';
 
@@ -27,7 +27,7 @@ function requireAuth(to, from, next) {
         authenticated we allow them to continue. Otherwise, we
         send the user back to the home page.
         */
-        if (store.getters.getUserSession.userCtx.name) {
+        if (Store.getters.getUserSession.userCtx.name) {
             next();
         } else {
             /**
@@ -346,7 +346,7 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
     /*let cont = true;
     let onlyAdminPaths = [];
-    let st = store;
+    let st = Store;
 
     /**
      * make sure only admins are allowed to navigate to this route
@@ -362,8 +362,8 @@ router.beforeEach((to, from, next) => {
     } else {
         next('/');
     }*/
-    store.dispatch('loadUserSession');
-    //console.log("to ", to, " from ", from)
+    Store.dispatch('loadUserSession');
+    // console.log("to ", to, " from ", from)
     next();
 });
 
