@@ -12,7 +12,7 @@
 </style>
 
 <template>
-    <div>
+    <div id="printAll">
         <div class="row justify-content-around">
             <div id="mainCol" class="col-8">
 
@@ -20,7 +20,7 @@
                 <div class="row" id="toDoRow">
                     <card class="card-tasks" no-footer-line>
                         <template slot="header">
-                            <h6 class="title">Todo List</h6>
+                            <h6 class="card-title">Todo List</h6>
                             <p class="category mt-1 mb-0">Keep a list of what needs to be done next with this Equiptment Request</p>
                         </template>
 
@@ -88,9 +88,9 @@
                     <card>
                         <div class="row" slot="header">
                             <div class="col-8">
-                                <h5 class="title">Equiptment Request</h5>
+                                <h5 class="title">Tech Request</h5>
                             </div>
-                            <div class="col-3 pt-2">
+                            <div class="col-3">
                                 <el-tag id="statusTag" :type="techRequest.status === 'new' ? 'brand color'
                                                         : techRequest.status === 'in review' ? 'info'
                                                         : techRequest.status === 'approved' ? 'success'
@@ -132,6 +132,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <!-- START ADDITIONAL EQUIPTMENT -->
                                         <div class="row">
                                             <div class="col">
                                                 <div class="statistics">
@@ -144,18 +145,22 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <!-- END ADDITIONAL EQUIPTMENT -->
+                                        <!-- START USAGE EQUIPTMENT -->
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="statistics">
+                                                    <div class="info">
+                                                        <h6 class="stats-title">Usage</h6>
+                                                        <p id="addition">{{ techRequest.usage }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- END USAGE EQUIPTMENT -->
                                     </div>
                                 </div>
                             </div>
-                            <!-- START ADDITIONAL EQUIPTMENT -->
-                            <div class="row">
-                                <div class="col-6">
-                                    <div class="card-stats justify-content-center">
-                                        
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- END ADDITIONAL EQUIPTMENT -->
                             <!-- COMMENTS -->
                             <p>Comments</p>
                             <div class="row">
@@ -281,8 +286,21 @@
                 <!-- BEGIN STATUS UPDATE / VERIFY ORG ROW -->
                 <div class="row"  v-loading="organizationsLoadStatus == 1">
                     <card>
-                        <div slot="header" class="text-center">
-                            <h6 class="title" >Update Status</h6>
+                        <div class="row" slot="header">
+                            <div class="col-9">
+                                <h6 class="card-title" >Actions</h6>
+                            </div>
+                            <div class="col-3">
+                                <drop-down
+                                position="right"
+                                class="nav-item"
+                                icon="now-ui-icons objects_spaceship">
+
+                                    <a class="dropdown-item" @click="$router.push('/print/' + techRequest._id)">Print View</a>
+                                    <!-- <a class="dropdown-item" v-print="'#printAll'">Print Page</a>
+                                    <a class="dropdown-item" v-print="'#requestInfoRow'">Print Request</a> -->
+                                </drop-down>
+                            </div>
                         </div>
                         <div class="card-body py-0">
                             <div class="row">
@@ -320,7 +338,7 @@
                 <div id="notesRow" class="row">
                     <card>
                         <div slot="header">
-                            <h6 class="title">Notes</h6>
+                            <h6 class="card-title">Notes</h6>
                             <!-- allow user to submit the note by hitting enter -->
                             <fg-input>
                                 <textarea 
@@ -430,7 +448,7 @@ export default {
             ],
             currentRow: null,
             organization_verified: false,
-            searchResult: []
+            searchResult: [],
         };
     },
     created() {

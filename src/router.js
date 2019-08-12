@@ -318,6 +318,18 @@ const router = new Router({
             ]
         },
         {
+            path: 'print/:techRequestId',
+            alias: '/print/:techRequestId',
+            name: 'Print Equiptment Request',
+            component: () =>
+                import ('./pages/TechRequests/TechRequest/PrintView.vue'),
+            meta: {
+                parentTitle: 'Tech Requests',
+                title: 'Print Tech Request',
+                module: 'Tech Requests'
+            }
+        },
+        {
             path: '/login',
             component: () =>
                 import ('./layouts/Auth/AuthLayout.vue'),

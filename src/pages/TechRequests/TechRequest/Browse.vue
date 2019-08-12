@@ -40,7 +40,7 @@
                                 :data="tableSelection">
                                 Export Selected
                             </download-excel>
-                        <!-- <a class="dropdown-item" href="#">Print</a> -->
+                        <!-- <a class="dropdown-item">Print</a> -->
                         </drop-down>
                     </div>
                 </div>
@@ -146,6 +146,7 @@ export default {
             json_fields: {
                     'ID': 'id',
                     'Submission Date': 'date',
+                    'Status': 'doc.status',
                     'Organization Name': 'doc.organization.name',
                     'Organizaton EIN': 'doc.organization.ein',
                     'Primary Contact Name': 'doc.organization.primary_contact.full_name',
@@ -287,7 +288,7 @@ export default {
             }).catch((err) => {
                 console.log('Trouble downloading all tech requests');
             });
-        }
+        },
     },
 }
 </script>

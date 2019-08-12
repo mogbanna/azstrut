@@ -87,18 +87,18 @@ export default {
   data() {
     return {
       activeNotifications: false,
-      showNavbar: false
+      showNavbar: false,
     };
   },
   computed: {
-    logoutUserLoadStatus() {
-        return this.$store.getters.getLogoutUserLoadStatus;
+      logoutUserLoadStatus() {
+          return this.$store.getters.getLogoutUserLoadStatus;
     },
     response() {
         return this.$store.getters.getResponse;
     },
     routeName() {
-      const { name } = this.$route;
+        const { name } = this.$route;
       return this.capitalizeFirstLetter(name);
     }
   },

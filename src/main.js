@@ -17,8 +17,8 @@ Vue.component('downloadExcel', JsonExcel);
 /**
  * https://www.npmjs.com/package/vue-print-nb
  */
-// import Print from 'vue-print-nb';
-// Vue.use(Print);
+import Print from 'vue-print-nb';
+Vue.use(Print);
 
 import ElementUI from 'element-ui';
 import lang from 'element-ui/lib/locale/lang/en';
