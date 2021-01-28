@@ -44,7 +44,7 @@
     "@vue/cli-plugin-pwa": "^3.9.0",
     "@vue/cli-service": "^3.9.0",
     "babel-plugin-component": "^1.1.1",
-    "electron": "^6.0.0",
+    "electron": "^9.4.0",
     "fuse.js": "^3.4.5",
     "node-sass": "^4.9.0",
     "sass-loader": "^7.1.0",
