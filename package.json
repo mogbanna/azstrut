@@ -46,7 +46,7 @@
     "babel-plugin-component": "^1.1.1",
     "electron": "^6.0.0",
     "fuse.js": "^3.4.5",
-    "node-sass": "^4.9.0",
+    "node-sass": "^7.0.0",
     "sass-loader": "^7.1.0",
     "sweetalert2": "^8.14.0",
     "vue-cli-plugin-electron-builder": "^1.4.0",
